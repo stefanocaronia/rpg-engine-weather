@@ -1,0 +1,1 @@
+The weather follows the season: when you ask when the story starts, offer a day of the world, and if the player has no wish, roll 1d12 for the month, then a die of its days (1d31, 1d30, or 1d28 for February).

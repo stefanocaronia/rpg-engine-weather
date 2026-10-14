@@ -1,0 +1,31 @@
+{
+  "name": "@rpgengine/weather",
+  "version": "0.1.0",
+  "description": "Weather by the climate score for RPG Engine: each dawn the sky changes by a roll, with seasons, deserts, polar cold and fog.",
+  "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "instructions",
+    "extension.yaml",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "keywords": [
+    "rpg-engine-package",
+    "rpg-engine",
+    "weather",
+    "ttrpg"
+  ],
+  "author": "Stefano Caronia",
+  "license": "(MIT AND CC-BY-4.0)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefanocaronia/rpg-engine.git",
+    "directory": "extensions/weather"
+  },
+  "rpg-engine": {
+    "kind": "extension",
+    "api": 1
+  }
+}
