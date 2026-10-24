@@ -176,15 +176,21 @@ function todayOf(game: GameView): { sky: string; range: WidgetValue; notes: stri
 
     const zone = zoneOf(game);
     const { sky, low, high } = reading(state.score, season, zone);
-    const imperial = game.units() === "imperial";
-    const degrees = (celsius: number): number => (imperial ? Math.round(celsius * 9 / 5 + 32) : celsius);
+    const { degrees, unit } = temperatureIn(game);
     const minute = now.minute ?? 0;
     const today = state.day === now.day;
     const notes = [
         ...(today && state.fog !== undefined && minute < 12 * 60 ? [state.fog === "heavy" ? "Heavy fog this morning" : "Light fog this morning"] : []),
         ...(today && state.variable === true && minute < afternoon ? ["It may change in the afternoon"] : []),
     ];
-    return { sky, range: { from: degrees(low), to: degrees(high), unit: imperial ? "°F" : "°C" }, notes, zone };
+    return { sky, range: { from: degrees(low), to: degrees(high), unit }, notes, zone };
+}
+
+/** Degrees in the campaign's units, from the tables' °C, and their unit. */
+function temperatureIn(game: GameView): { degrees: (celsius: number) => number; unit: "°C" | "°F"; }
+{
+    const imperial = game.units() === "imperial";
+    return { degrees: (celsius) => (imperial ? Math.round(celsius * 9 / 5 + 32) : celsius), unit: imperial ? "°F" : "°C" };
 }
 
 /** The icon of extension.yaml that draws a sky. */
@@ -242,9 +248,8 @@ function morningNotes(state: { day: number; variable?: boolean; fog?: Fog; }, la
 function readingText(game: Game, score: number, season: Season): string
 {
     const { sky, low, high } = reading(score, season, zoneOf(game));
-    const imperial = game.units() === "imperial";
-    const degrees = (celsius: number): number => (imperial ? Math.round(celsius * 9 / 5 + 32) : celsius);
-    return `${sky}, ${degrees(low)} to ${degrees(high)} °${imperial ? "F" : "C"}`;
+    const { degrees, unit } = temperatureIn(game);
+    return `${sky}, ${degrees(low)} to ${degrees(high)} ${unit}`;
 }
 
 function trendText(before: number, after: number): string
