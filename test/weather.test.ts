@@ -4,6 +4,7 @@ import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { runCommandLine } from "../../../src/command-line.ts";
+import { campaignWidgets } from "../../../src/commands/game-widgets.ts";
 import type { Context } from "../../../src/core/context.ts";
 import { inPlay, makeTempFolder, readLogFile, removeFolder, testContext } from "../../../test/support.ts";
 import { afternoonChange, coldColumn, morningChange, reading } from "../src/climate.ts";
@@ -155,6 +156,34 @@ describe("the weather in a campaign", () => {
         await campaign("5e", "28 February", 4, 4);
         expect(await ok("advance", "--to", "day 1, 18:00")).toBe("The game starts on day 1, 18:00 (28 February, winter).\nWeather: cloudy and cold, 0 to 5 °C.");
         expect(await ok("advance", "--by", "1d")).toBe("day 1, 18:00 → day 2, 18:00 (1 March, spring).\nWeather this morning: partly cloudy, 15 to 20 °C, as before.");
+    });
+
+    it("shows on the dashboard the sky in the top and today's weather in the Scene, in the campaign's language and units (D-502)", async () => {
+        await campaign("5e", "10 January", 4, 2, 2, 4);
+        expect(await campaignWidgets(folder, context)).toEqual([
+            expect.objectContaining({ id: "weather.now", place: "top", title: "Weather" }),
+            expect.objectContaining({ id: "weather.today", place: "page", page: "scene" }),
+        ]);
+        expect((await campaignWidgets(folder, context)).some((widget) => widget.shows !== undefined)).toBe(false);
+
+        await ok("advance", "--to", "day 1, 05:00");
+        await ok("advance", "--by", "2h");
+        const [now, today] = await campaignWidgets(folder, context);
+        const range = { from: 0, to: 5, unit: "°C" };
+        expect(now.shows).toEqual({ icon: expect.any(String), chip: { text: "{range}", values: { range } }, says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } } });
+        expect(today.shows?.parts).toEqual([{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range }, { facts: ["Light fog this morning", "It may change in the afternoon"] }]);
+
+        await ok("config", "language", "it");
+        await ok("config", "units", "imperial");
+        const [italian, card] = await campaignWidgets(folder, context);
+        expect(italian).toMatchObject({ title: "Meteo", from: "il meteo secondo il punteggio del clima, di Stefano Caronia" });
+        expect(italian.shows?.says).toEqual({ text: "{sky}, {range}", values: { sky: "nuvoloso e freddo", range: { from: 32, to: 41, unit: "°F" } } });
+        expect(card.shows?.parts?.[0]).toMatchObject({ lead: "Nuvoloso e freddo" });
+        expect(card.shows?.parts?.[1]).toEqual({ facts: ["Nebbia leggera stamattina", "Può cambiare nel pomeriggio"] });
+
+        // Past noon the fog is gone, and past the afternoon's roll it changes no more today.
+        await ok("advance", "--by", "8h");
+        expect((await campaignWidgets(folder, context))[1].shows?.parts).toHaveLength(1);
     });
 
     it("is set by the master when the story changes it, until the next dawn", async () => {

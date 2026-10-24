@@ -1,6 +1,6 @@
 // The weather extension's code: each dawn the weather changes by the climate score, and at 14:00 again on a variable day, as advance and travel let time pass;
-// weather says it, weather-set changes it when the story does. The rules are in climate.ts.
-import type { ExtensionEntry, Game, GameMoment } from "rpg-engine";
+// weather says it, weather-set changes it when the story does; on the dashboard, the sky in the top and today's weather in the Scene. The rules are in climate.ts.
+import type { ExtensionEntry, Game, GameMoment, GameView, Widget, WidgetText, WidgetValue } from "rpg-engine";
 import { afternoonChange, coldColumn, type Fog, morningChange, reading, type Season, seasons, type Zone } from "./climate.ts";
 
 /**
@@ -56,6 +56,27 @@ const weather: ExtensionEntry = ({ z }) => ({
             },
         },
     ],
+    widgets: {
+        // The sky and the temperature, the whole sentence in its tip (D-502 (6)).
+        now: (game) => {
+            const today = todayOf(game);
+            return today === undefined ? undefined : { icon: skyIcon(today.sky), chip: { text: "{range}", values: { range: today.range } }, says: { text: "{sky}, {range}", values: { sky: today.sky, range: today.range } } };
+        },
+        // Today's sky, the fog of the morning, whether the afternoon may change it, and the zone where it is not temperate.
+        today: (game) => {
+            const today = todayOf(game);
+
+            if (today === undefined) {
+                return undefined;
+            }
+
+            const facts: WidgetText[] = [...today.notes, ...(today.zone === "torrid" ? ["Hot desert"] : today.zone === "polar" ? ["Polar cold"] : [])];
+            return {
+                icon: skyIcon(today.sky),
+                parts: [{ lead: `${today.sky.charAt(0).toUpperCase()}${today.sky.slice(1)}`, icon: skyIcon(today.sky), value: today.range }, ...(facts.length === 0 ? [] : [{ facts }])],
+            } satisfies Widget;
+        },
+    },
     timePassed: ({ from, to }, game) => {
         const state = readState(game);
 
@@ -142,6 +163,46 @@ function change(game: Game, kept: { score: number; day: number; variable?: boole
     return [`Weather ${last.turn.kind === "dawn" ? "this morning" : "this afternoon"}${zoneText(zone)}: ${now}.`];
 }
 
+/** The weather now, as the dashboard shows it: the sky, the temperature in the campaign's units, the morning's notes, the zone; undefined while there is none. */
+function todayOf(game: GameView): { sky: string; range: WidgetValue; notes: string[]; zone: Zone; } | undefined
+{
+    const state = readState(game);
+    const now = game.now();
+    const season = now === undefined ? undefined : seasonOf(game, now.day);
+
+    if (now === undefined || state === undefined || "off" in state || season === undefined || !isSeason(season)) {
+        return undefined;
+    }
+
+    const zone = zoneOf(game);
+    const { sky, low, high } = reading(state.score, season, zone);
+    const imperial = game.units() === "imperial";
+    const degrees = (celsius: number): number => (imperial ? Math.round(celsius * 9 / 5 + 32) : celsius);
+    const minute = now.minute ?? 0;
+    const today = state.day === now.day;
+    const notes = [
+        ...(today && state.fog !== undefined && minute < 12 * 60 ? [state.fog === "heavy" ? "Heavy fog this morning" : "Light fog this morning"] : []),
+        ...(today && state.variable === true && minute < afternoon ? ["It may change in the afternoon"] : []),
+    ];
+    return { sky, range: { from: degrees(low), to: degrees(high), unit: imperial ? "°F" : "°C" }, notes, zone };
+}
+
+/** The icon of extension.yaml that draws a sky. */
+function skyIcon(sky: string): string
+{
+    const kinds: [RegExp, string][] = [
+        [/snow/, "snow"],
+        [/thunder|hail/, "storm"],
+        [/rain|shower/, "rain"],
+        [/wind|sandstorm/, "wind"],
+        [/heat|sultry|blazing/, "heat"],
+        [/extreme cold|frigid/, "cold"],
+        [/partly/, "partly"],
+        [/cloudy/, "cloudy"],
+    ];
+    return kinds.find(([pattern]) => pattern.test(sky))?.[1] ?? "clear";
+}
+
 /** What the weather command says: now, and, for the master, the scale weather-set takes. */
 function nowText(game: Game, withScale: boolean): string
 {
@@ -197,7 +258,7 @@ function zoneText(zone: Zone): string
 }
 
 /** The zone where the party is: the climate its places say, or a desert's or snow's biome; elsewhere the seasons hold. */
-function zoneOf(game: Game): Zone
+function zoneOf(game: GameView): Zone
 {
     const environment = Object.fromEntries(Object.entries(game.party()?.environment ?? {}).map(([name, value]) => [name.toLowerCase(), value.toLowerCase()]));
     const said = environment.climate ?? environment.biome ?? "";
@@ -205,7 +266,7 @@ function zoneOf(game: Game): Zone
 }
 
 /** The season of a day; text that says why there is none, when the calendar's seasons are not the weather's; undefined while the story counts only days. */
-function seasonOf(game: Game, day: number): string | undefined
+function seasonOf(game: GameView, day: number): string | undefined
 {
     const date = game.calendarDay(day);
 
@@ -248,7 +309,7 @@ function turnsBetween(from: GameMoment, to: GameMoment): Turn[]
 }
 
 /** The state as kept; undefined when there is none, or what is written there is not one, as by hand. */
-function readState(game: Game): WeatherState | undefined
+function readState(game: GameView): WeatherState | undefined
 {
     const state = game.state.read() as Record<string, unknown> | null;
 

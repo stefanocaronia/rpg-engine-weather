@@ -1,0 +1,48 @@
+# The words of the weather in Italian, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write.
+title: il meteo secondo il punteggio del clima, di Stefano Caronia
+about: il cielo cambia a ogni alba con un tiro, con le stagioni, i deserti caldi, il gelo polare e la nebbia
+words:
+  Weather: Meteo
+  Today's weather: Il tempo di oggi
+  Heavy fog this morning: Nebbia fitta stamattina
+  Light fog this morning: Nebbia leggera stamattina
+  It may change in the afternoon: Può cambiare nel pomeriggio
+  Hot desert: Deserto caldo
+  Polar cold: Gelo polare
+  # Winter
+  clear and cool: sereno e fresco
+  sunny and cold: soleggiato e freddo
+  cloudy and cold: nuvoloso e freddo
+  fine, cold rain: pioggerella fredda
+  light or heavy snow: neve, leggera o fitta
+  a snowstorm: tempesta di neve
+  # Spring
+  clear and warm: sereno e tiepido
+  sunny and mild: soleggiato e mite
+  partly cloudy: parzialmente nuvoloso
+  cloudy with showers: nuvoloso con rovesci
+  rain: pioggia
+  heavy rain and wind: pioggia forte e vento
+  # Summer
+  clear with a breeze: sereno con brezza
+  clear and hot: sereno e caldo
+  sunny and hot: soleggiato e caldo
+  a summer thunderstorm, or hail: temporale estivo, o grandine
+  a heat wave: ondata di calore
+  # Autumn
+  clear and mild: sereno e mite
+  sunny and cool: soleggiato e fresco
+  scattered rain: pioggia sparsa
+  strong wind: vento forte
+  # Hot deserts
+  partly cloudy and bearable: parzialmente nuvoloso e sopportabile
+  blazing sun: sole cocente
+  sultry heat: afa
+  oppressive heat: caldo opprimente
+  a sandstorm, or scorching heat: tempesta di sabbia, o caldo torrido
+  # Polar cold
+  clear and freezing: sereno e gelido
+  extreme cold: freddo estremo
+  cloudy and frigid: nuvoloso e glaciale
+  light snow: neve leggera
+  heavy snow: neve fitta
