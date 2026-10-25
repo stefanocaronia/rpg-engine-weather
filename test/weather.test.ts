@@ -134,6 +134,22 @@ describe("the weather in a campaign", () => {
         expect(await ok("advance", "--to", "day 1, 10:00")).toBe("The game starts on day 1, 10:00 (1 July, summer).\nWeather (hot desert): blazing sun, 86 to 95 °F.");
     });
 
+    it("rolls afresh when the party comes into another zone, or out of it, whatever the dawns on the way rolled", async () => {
+        await campaign("ironsworn", "1 July", 4, 2, 6);
+        await ok("write", "Kira", "--type", "character", "--set", "role=pc");
+        await ok("write", "Colline", "--type", "place", "--add", "contains=[[Kira]]");
+        await ok("write", "Dune Rosse", "--type", "place", "--add", "environment=biome: desert");
+        expect(await ok("advance", "--to", "day 1, 10:00")).toBe("The game starts on day 1, 10:00 (1 July, summer).\nWeather: sunny and hot, 25 to 30 °C.");
+        await ok("move", "Kira", "--to", "Dune Rosse");
+        // Advance tells also what holds around Kira: only the weather's line is looked at.
+        expect(await ok("advance", "--by", "1h")).toContain("\nWeather, into the hot desert: oppressive heat, 40 to 45 °C.");
+        expect(await ok("advance", "--by", "1h")).not.toContain("Weather");
+        await ok("move", "Kira", "--to", "Colline");
+        expect(await ok("advance", "--by", "1d")).toContain("\nWeather, out of the hot desert: clear with a breeze, 25 to 30 °C.");
+        expect(readLogFile(folder).filter((entry) => entry.type === "extension").map((entry) => entry.data.text))
+            .toEqual(["weather begins at 4", "weather begins at 2 in the hot desert", "weather begins at 6 in the lands of the seasons"]);
+    });
+
     it("is off while the story counts only days, said once, with how to have it", async () => {
         await campaign("5e", "day 1", 4);
         const off = "Weather: off while the story counts only days. It follows the season: to have it, start the story on a day of the world with config calendar-start, "
@@ -193,5 +209,19 @@ describe("the weather in a campaign", () => {
         expect(readLogFile(folder).at(-1)?.data).toEqual({ extension: "weather", text: "weather set to 1: the druid's storm" });
         expect((await rpg("weather-set", "7")).exitCode).toBe(1);
         expect(await ok("advance", "--by", "13h")).toBe("day 1, 18:00 → day 2, 07:00 (15 April, spring).\nWeather this morning: heavy rain and wind, 5 to 10 °C, as before.");
+    });
+
+    it("sets the morning's fog apart from the score, keeping what is not given, and never past noon", async () => {
+        await campaign("5e", "10 January", 4, 1, 1);
+        await ok("advance", "--to", "day 1, 18:00");
+        expect(await ok("advance", "--by", "13h")).toBe("day 1, 18:00 → day 2, 07:00 (11 January, winter).\nWeather this morning: fine, cold rain, -2 to 4 °C, worse; heavy fog this morning.");
+        expect(await ok("weather-set", "2")).toBe("Now: light or heavy snow, -5 to 0 °C; heavy fog this morning. Score 2 of 6.");
+        expect(await ok("weather-set", "--fog", "none")).toBe("Now: light or heavy snow, -5 to 0 °C. Score 2 of 6.");
+        expect(await ok("weather-set", "--fog", "light", "--why", "the valley's page")).toBe("Now: light or heavy snow, -5 to 0 °C; light fog this morning. Score 2 of 6.");
+        expect(readLogFile(folder).filter((entry) => entry.type === "extension").map((entry) => entry.data.text).slice(-3))
+            .toEqual(["weather set to 2", "weather set to fog none", "weather set to fog light: the valley's page"]);
+        expect((await rpg("weather-set")).exitCode).toBe(1);
+        await ok("advance", "--by", "6h");
+        expect((await rpg("weather-set", "--fog", "heavy")).output).toContain("past noon");
     });
 });

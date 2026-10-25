@@ -1,13 +1,15 @@
-// The weather extension's code: each dawn the weather changes by the climate score, and at 14:00 again on a variable day, as advance and travel let time pass;
+// The weather extension's code: each dawn the weather changes by the climate score, at 14:00 again on a variable day, and afresh in another zone, as time passes;
 // weather says it, weather-set changes it when the story does; on the dashboard, the sky in the top and today's weather in the Scene. The rules are in climate.ts.
 import type { ExtensionEntry, Game, GameMoment, GameView, Widget, WidgetText, WidgetValue } from "rpg-engine";
 import { afternoonChange, coldColumn, type Fog, morningChange, reading, type Season, seasons, type Zone } from "./climate.ts";
 
 /**
- * What the weather keeps in the campaign: the score, the day it was rolled for, whether its afternoon rolls again, and its morning's fog; or that it is off,
- * while the story counts only days.
+ * What the weather keeps in the campaign: the score, the day it was rolled for, whether its afternoon rolls again, its morning's fog and the zone it was
+ * rolled in; or that it is off, while the story counts only days.
  */
-type WeatherState = { score: number; day: number; variable?: boolean; fog?: Fog; } | { off: true; };
+type WeatherState = Weather | { off: true; };
+
+type Weather = { score: number; day: number; variable?: boolean; fog?: Fog; zone?: Zone; };
 
 /** A moment the weather changes at: a dawn or the afternoon of a day. */
 interface Turn
@@ -35,23 +37,39 @@ const weather: ExtensionEntry = ({ z }) => ({
         {
             name: "weather-set",
             description: "Set the weather, when the story changes it (a spell, a storm you decide): its score on the scale weather gives for this season and place, "
-                + "from 6, the mildest, to 1, its extreme, which in summer is a heat wave. It changes again at the next dawn. Example: weather-set 2, why the druid's storm.",
+                + "from 6, the mildest, to 1, its extreme, which in summer is a heat wave; the morning's fog, until noon; or both. What you leave out stays. "
+                + "It changes again at the next dawn. Example: weather-set 2, why the druid's storm; or fog heavy, why the valley's page.",
             input: z.object({
                 // A number, as the command line gives it in words too.
-                score: z.preprocess((value) => (typeof value === "string" && /^\d+$/.test(value.trim()) ? Number(value) : value), z.int().min(1).max(6))
+                score: z.preprocess((value) => (typeof value === "string" && /^\d+$/.test(value.trim()) ? Number(value) : value), z.int().min(1).max(6)).optional()
                     .describe("from 6, the mildest, to 1, the season's extreme, as weather lists them"),
+                fog: z.enum(["heavy", "light", "none"]).optional().describe("the morning's fog, until noon: heavy, light, or none to lift it"),
                 why: z.string().optional().describe("why it changes, for the log"),
             }),
             positionals: ["score"],
             run: (input, game) => {
                 const now = game.now();
+                const state = readState(game);
 
-                if (now === undefined) {
+                if (now === undefined || state === undefined) {
                     return "No weather yet: it begins when the game has its date, with advance to.";
                 }
 
-                game.state.write({ score: input.score, day: now.day } satisfies WeatherState);
-                game.log(`weather set to ${input.score}${input.why === undefined ? "" : `: ${input.why}`}`);
+                if ("off" in state) {
+                    return offText;
+                }
+
+                if (input.score === undefined && input.fog === undefined) {
+                    throw new Error("Give the score, the fog, or both: as weather-set 2, or weather-set --fog heavy. Nothing changed.");
+                }
+
+                if (input.fog !== undefined && input.fog !== "none" && (now.minute ?? 0) >= 12 * 60) {
+                    throw new Error("The fog is the morning's, until noon, and it is past noon: tell an evening mist in the story. Nothing changed.");
+                }
+
+                game.state.write(setWeather(state, now.day, input.score, input.fog, zoneOf(game)));
+                const changes = [...(input.score === undefined ? [] : [`${input.score}`]), ...(input.fog === undefined ? [] : [`fog ${input.fog}`])].join(", ");
+                game.log(`weather set to ${changes}${input.why === undefined ? "" : `: ${input.why}`}`);
                 return nowText(game, false);
             },
         },
@@ -85,6 +103,11 @@ const weather: ExtensionEntry = ({ z }) => ({
             return begin(game, to, state !== undefined);
         }
 
+        // Into another zone, or out of it: its own weather, rolled afresh, whatever the dawns on the way rolled.
+        if (state.zone !== undefined && state.zone !== zoneOf(game)) {
+            return begin(game, to, false, state.zone);
+        }
+
         const turns = turnsBetween(from, to);
         return turns.length === 0 ? [] : change(game, state, turns, to);
     },
@@ -92,8 +115,17 @@ const weather: ExtensionEntry = ({ z }) => ({
 
 export default weather;
 
-/** The weather as it begins, with its season; off, said once, while the story counts only days. */
-function begin(game: Game, at: GameMoment, saidOff: boolean): string[]
+/** The weather weather-set leaves: the score given, or the one there was; the fog given, or the morning's; the afternoon's roll only while the score stays. */
+function setWeather(state: Weather, day: number, score: number | undefined, fog: Fog | "none" | undefined, zone: Zone): Weather
+{
+    const today = state.day === day;
+    const keptFog = fog === undefined ? (today ? state.fog : undefined) : fog === "none" ? undefined : fog;
+    const variable = score === undefined && today && state.variable === true;
+    return { score: score ?? state.score, day, ...(variable ? { variable: true } : {}), ...(keptFog === undefined ? {} : { fog: keptFog }), zone };
+}
+
+/** The weather as it begins, with its season, or again in a zone the party came into from another; off, said once, while the story counts only days. */
+function begin(game: Game, at: GameMoment, saidOff: boolean, left?: Zone): string[]
 {
     const season = seasonOf(game, at.day);
 
@@ -106,14 +138,16 @@ function begin(game: Game, at: GameMoment, saidOff: boolean): string[]
         return [season];
     }
 
+    const zone = zoneOf(game);
     const score = game.roll("1d6").total;
-    game.state.write({ score, day: at.day } satisfies WeatherState);
-    game.log(`weather begins at ${score}`);
-    return [`Weather${zoneText(zoneOf(game))}: ${readingText(game, score, season)}.`];
+    game.state.write({ score, day: at.day, zone } satisfies WeatherState);
+    game.log(`weather begins at ${score}${left === undefined ? "" : ` in the ${zoneName(zone)}`}`);
+    const into = left === undefined ? zoneText(zone) : zone === "temperate" ? `, out of the ${zoneName(left)}` : `, into the ${zoneName(zone)}`;
+    return [`Weather${into}: ${readingText(game, score, season)}.`];
 }
 
 /** The dawns and afternoons that came: each dawn rolls the change, each afternoon of a variable day rolls it again; the output tells the last of them. */
-function change(game: Game, kept: { score: number; day: number; variable?: boolean; fog?: Fog; }, turns: Turn[], to: GameMoment): string[]
+function change(game: Game, kept: Weather, turns: Turn[], to: GameMoment): string[]
 {
     const zone = zoneOf(game);
     let state = kept;
@@ -146,7 +180,7 @@ function change(game: Game, kept: { score: number; day: number; variable?: boole
         last = { turn, season };
     }
 
-    game.state.write(state);
+    game.state.write({ ...state, zone });
 
     if (last === undefined) {
         return [];
@@ -259,7 +293,12 @@ function trendText(before: number, after: number): string
 
 function zoneText(zone: Zone): string
 {
-    return zone === "torrid" ? " (hot desert)" : zone === "polar" ? " (polar cold)" : "";
+    return zone === "temperate" ? "" : ` (${zoneName(zone)})`;
+}
+
+function zoneName(zone: Zone): string
+{
+    return zone === "torrid" ? "hot desert" : zone === "polar" ? "polar cold" : "lands of the seasons";
 }
 
 /** The zone where the party is: the climate its places say, or a desert's or snow's biome; elsewhere the seasons hold. */
@@ -334,6 +373,7 @@ function readState(game: GameView): WeatherState | undefined
             day: day as number,
             ...(state.variable === true ? { variable: true } : {}),
             ...(state.fog === "heavy" || state.fog === "light" ? { fog: state.fog } : {}),
+            ...(state.zone === "temperate" || state.zone === "torrid" || state.zone === "polar" ? { zone: state.zone } : {}),
         }
         : undefined;
 }
