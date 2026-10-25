@@ -1,12 +1,10 @@
 // The weather extension (D-257, D-427, D-436): the rules of the climate score, and the extension in a campaign, through the engine's commands, with dice given.
 import fc from "fast-check";
-import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { runCommandLine } from "../../../src/command-line.ts";
-import { campaignWidgets } from "../../../src/commands/game-widgets.ts";
-import type { Context } from "../../../src/core/context.ts";
-import { inPlay, makeTempFolder, readLogFile, removeFolder, testContext } from "../../../test/support.ts";
+import { fileURLToPath } from "node:url";
+import { type TestCampaign, testCampaign } from "rpg-engine/testing";
+import { afterEach, describe, expect, it } from "vitest";
 import { afternoonChange, coldColumn, morningChange, reading } from "../src/climate.ts";
 
 /** Dice that show these faces in turn. */
@@ -79,9 +77,11 @@ describe("the climate score", () => {
 });
 
 describe("the weather in a campaign", () => {
+    // The extension's own folder, installed in each test campaign as the player's own.
+    const extension = fileURLToPath(new URL("..", import.meta.url));
+    let testing: TestCampaign;
     let folder: string;
-    let context: Context;
-    const rpg = (...args: string[]) => runCommandLine(args, context);
+    const rpg = (...args: string[]) => testing.run(...args);
 
     const ok = async (...args: string[]): Promise<string> => {
         const result = await rpg(...args);
@@ -92,18 +92,12 @@ describe("the weather in a campaign", () => {
     /** A campaign of this system that uses the weather, the story starting on this day of the world, and these faces of the dice in turn. */
     async function campaign(system: string, start: string, ...rolled: number[]): Promise<void>
     {
-        await ok("init", "--name", "Valle", "--language", "en", "--system", system, "--difficulty", "normal", "--lethality", "dice");
-        inPlay(folder);
-        appendFileSync(join(folder, "campaign.yaml"), `calendar-start: ${start}\nextensions:\n  "@rpgengine/weather": 0.1.0\n`);
-        context.random = faces(...rolled);
+        testing = await testCampaign({ system, extensions: [extension], settings: { "calendar-start": start } });
+        folder = testing.folder;
+        testing.dice(...rolled);
     }
 
-    beforeEach(() => {
-        folder = makeTempFolder();
-        context = testContext(folder);
-    });
-
-    afterEach(() => removeFolder(folder));
+    afterEach(() => testing.close());
 
     it("begins with the game, rolling the season's score, and changes at each dawn, telling the master in advance's output", async () => {
         await campaign("5e", "14 April", 3, 2, 6);
@@ -115,8 +109,8 @@ describe("the weather in a campaign", () => {
                 + "6 clear and warm, 5 sunny and mild, 4 partly cloudy, 3 cloudy with showers, 2 rain, 1 heavy rain and wind.",
         );
         expect(await ok("advance", "--by", "8h")).toBe("day 2, 07:00 → day 2, 15:00 (15 April, spring).\nWeather this afternoon: partly cloudy, 15 to 20 °C, better.");
-        expect(readFileSync(join(folder, "extensions", "weather", "state.yaml"), "utf8")).toContain("score: 4\nday: 2\n");
-        expect(readLogFile(folder).filter((entry) => entry.type === "extension").map((entry) => entry.data.text)).toEqual(["weather begins at 3", "weather at 3", "weather at 4"]);
+        expect(testing.read("extensions/weather/state.yaml")).toContain("score: 4\nday: 2\n");
+        expect(testing.log().filter((entry) => entry.type === "extension").map((entry) => entry.data.text)).toEqual(["weather begins at 3", "weather at 3", "weather at 4"]);
     });
 
     it("brings fog on cold mornings, and tells many mornings at once, the last as it is now", async () => {
@@ -127,7 +121,7 @@ describe("the weather in a campaign", () => {
     });
 
     it("reads the table of a hot desert where the party is, in the campaign's units", async () => {
-        await campaign("ironsworn", "1 July", 4);
+        await campaign("free", "1 July", 4);
         await ok("write", "Kira", "--type", "character", "--set", "role=pc");
         await ok("write", "Dune Rosse", "--type", "place", "--add", "contains=[[Kira]]", "--add", "environment=biome: desert");
         await ok("config", "units", "imperial");
@@ -135,7 +129,7 @@ describe("the weather in a campaign", () => {
     });
 
     it("rolls afresh when the party comes into another zone, or out of it, whatever the dawns on the way rolled", async () => {
-        await campaign("ironsworn", "1 July", 4, 2, 6);
+        await campaign("free", "1 July", 4, 2, 6);
         await ok("write", "Kira", "--type", "character", "--set", "role=pc");
         await ok("write", "Colline", "--type", "place", "--add", "contains=[[Kira]]");
         await ok("write", "Dune Rosse", "--type", "place", "--add", "environment=biome: desert");
@@ -146,7 +140,7 @@ describe("the weather in a campaign", () => {
         expect(await ok("advance", "--by", "1h")).not.toContain("Weather");
         await ok("move", "Kira", "--to", "Colline");
         expect(await ok("advance", "--by", "1d")).toContain("\nWeather, out of the hot desert: clear with a breeze, 25 to 30 °C.");
-        expect(readLogFile(folder).filter((entry) => entry.type === "extension").map((entry) => entry.data.text))
+        expect(testing.log().filter((entry) => entry.type === "extension").map((entry) => entry.data.text))
             .toEqual(["weather begins at 4", "weather begins at 2 in the hot desert", "weather begins at 6 in the lands of the seasons"]);
     });
 
@@ -176,22 +170,22 @@ describe("the weather in a campaign", () => {
 
     it("shows on the dashboard the sky in the top and today's weather in the Scene, in the campaign's language and units (D-502)", async () => {
         await campaign("5e", "10 January", 4, 2, 2, 4);
-        expect(await campaignWidgets(folder, context)).toEqual([
+        expect(await testing.widgets()).toEqual([
             expect.objectContaining({ id: "weather.now", place: "top", title: "Weather" }),
             expect.objectContaining({ id: "weather.today", place: "page", page: "scene" }),
         ]);
-        expect((await campaignWidgets(folder, context)).some((widget) => widget.shows !== undefined)).toBe(false);
+        expect((await testing.widgets()).some((widget) => widget.shows !== undefined)).toBe(false);
 
         await ok("advance", "--to", "day 1, 05:00");
         await ok("advance", "--by", "2h");
-        const [now, today] = await campaignWidgets(folder, context);
+        const [now, today] = await testing.widgets();
         const range = { from: 0, to: 5, unit: "°C" };
         expect(now.shows).toEqual({ icon: expect.any(String), chip: { text: "{range}", values: { range } }, says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } } });
         expect(today.shows?.parts).toEqual([{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range }, { facts: ["Light fog this morning", "It may change in the afternoon"] }]);
 
         await ok("config", "language", "it");
         await ok("config", "units", "imperial");
-        const [italian, card] = await campaignWidgets(folder, context);
+        const [italian, card] = await testing.widgets();
         expect(italian).toMatchObject({ title: "Meteo", from: "il meteo secondo il punteggio del clima, di Stefano Caronia" });
         expect(italian.shows?.says).toEqual({ text: "{sky}, {range}", values: { sky: "nuvoloso e freddo", range: { from: 32, to: 41, unit: "°F" } } });
         expect(card.shows?.parts?.[0]).toMatchObject({ lead: "Nuvoloso e freddo" });
@@ -199,7 +193,7 @@ describe("the weather in a campaign", () => {
 
         // Past noon the fog is gone, and past the afternoon's roll it changes no more today.
         await ok("advance", "--by", "8h");
-        expect((await campaignWidgets(folder, context))[1].shows?.parts).toHaveLength(1);
+        expect((await testing.widgets())[1].shows?.parts).toHaveLength(1);
     });
 
     it("is set by the master when the story changes it, until the next dawn", async () => {
@@ -208,7 +202,7 @@ describe("the weather in a campaign", () => {
         expect(await ok("weather-set", "1", "--why", "the druid's storm")).toBe(
             "Now: heavy rain and wind, 5 to 10 °C. Score 1 of 6, set by the story; the dice gave 4, partly cloudy, to go back to when it ends.",
         );
-        expect(readLogFile(folder).at(-1)?.data).toEqual({ extension: "weather", text: "weather set to 1: the druid's storm" });
+        expect(testing.log().at(-1)?.data).toEqual({ extension: "weather", text: "weather set to 1: the druid's storm" });
         expect((await rpg("weather-set", "7")).exitCode).toBe(1);
         expect(await ok("advance", "--by", "13h")).toBe("day 1, 18:00 → day 2, 07:00 (15 April, spring).\nWeather this morning: heavy rain and wind, 5 to 10 °C, as before.");
     });
@@ -223,7 +217,7 @@ describe("the weather in a campaign", () => {
         expect(await ok("weather-set", "--fog", "light", "--why", "the valley's page")).toBe(`Now: light or heavy snow, -5 to 0 °C; light fog this morning. Score 2 of 6, ${back}`);
         // Back to what the dice gave, the story's weather over: nothing more to go back to.
         expect(await ok("weather-set", "3")).toBe("Now: fine, cold rain, -2 to 4 °C; light fog this morning. Score 3 of 6.");
-        expect(readLogFile(folder).filter((entry) => entry.type === "extension").map((entry) => entry.data.text).slice(-4, -1))
+        expect(testing.log().filter((entry) => entry.type === "extension").map((entry) => entry.data.text).slice(-4, -1))
             .toEqual(["weather set to 2", "weather set to fog none", "weather set to fog light: the valley's page"]);
         expect((await rpg("weather-set")).exitCode).toBe(1);
         await ok("advance", "--by", "6h");
