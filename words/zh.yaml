@@ -1,0 +1,49 @@
+# The words of the weather in Chinese (Simplified), as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: 按气候分值变化的天气，作者 Stefano Caronia
+about: 每个黎明掷一次骰，天空随之变化；有四季、炎热沙漠、极地严寒和雾
+words:
+  Weather: 天气
+  Today's weather: 今日天气
+  Heavy fog this morning: 今晨大雾
+  Light fog this morning: 今晨薄雾
+  It may change in the afternoon: 午后可能变天
+  Hot desert: 炎热沙漠
+  Polar cold: 极地严寒
+  "{sky}, {range}": "{sky}，{range}"
+  # Winter
+  clear and cool: 晴朗凉爽
+  sunny and cold: 阳光充足，寒冷
+  cloudy and cold: 多云寒冷
+  fine, cold rain: 冰冷细雨
+  light or heavy snow: 小雪或大雪
+  a snowstorm: 暴风雪
+  # Spring
+  clear and warm: 晴朗温暖
+  sunny and mild: 阳光充足，温和
+  partly cloudy: 晴间多云
+  cloudy with showers: 多云有阵雨
+  rain: 雨
+  heavy rain and wind: 大雨伴大风
+  # Summer
+  clear with a breeze: 晴朗微风
+  clear and hot: 晴朗炎热
+  sunny and hot: 阳光充足，炎热
+  a summer thunderstorm, or hail: 夏季雷暴或冰雹
+  a heat wave: 热浪
+  # Autumn
+  clear and mild: 晴朗温和
+  sunny and cool: 阳光充足，凉爽
+  scattered rain: 零星小雨
+  strong wind: 大风
+  # Hot deserts
+  partly cloudy and bearable: 晴间多云，尚可忍受
+  blazing sun: 烈日
+  sultry heat: 闷热
+  oppressive heat: 酷热难耐
+  a sandstorm, or scorching heat: 沙尘暴或灼热
+  # Polar cold
+  clear and freezing: 晴朗冰冷
+  extreme cold: 极寒
+  cloudy and frigid: 多云酷寒
+  light snow: 小雪
+  heavy snow: 大雪

@@ -1,0 +1,48 @@
+# The words of the weather in Ukrainian, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: погода за шкалою клімату, автор Stefano Caronia
+about: небо змінюється з кожним світанком за кидком; є пори року, спекотні пустелі, полярний холод і туман
+words:
+  Weather: Погода
+  Today's weather: Погода на сьогодні
+  Heavy fog this morning: Зранку густий туман
+  Light fog this morning: Зранку легкий туман
+  It may change in the afternoon: Після полудня погода може змінитися
+  Hot desert: Спекотна пустеля
+  Polar cold: Полярний холод
+  # Winter
+  clear and cool: ясно й прохолодно
+  sunny and cold: сонячно й холодно
+  cloudy and cold: хмарно й холодно
+  fine, cold rain: дрібний холодний дощ
+  light or heavy snow: сніг, слабкий або сильний
+  a snowstorm: хуртовина
+  # Spring
+  clear and warm: ясно й тепло
+  sunny and mild: сонячно й помірно тепло
+  partly cloudy: мінлива хмарність
+  cloudy with showers: хмарно, короткочасні дощі
+  rain: дощ
+  heavy rain and wind: сильний дощ і вітер
+  # Summer
+  clear with a breeze: ясно, легкий вітерець
+  clear and hot: ясно й спекотно
+  sunny and hot: сонячно й спекотно
+  a summer thunderstorm, or hail: літня гроза або град
+  a heat wave: аномальна спека
+  # Autumn
+  clear and mild: ясно й помірно тепло
+  sunny and cool: сонячно й прохолодно
+  scattered rain: місцями дощ
+  strong wind: сильний вітер
+  # Hot deserts
+  partly cloudy and bearable: мінлива хмарність, терпимо
+  blazing sun: пекуче сонце
+  sultry heat: задуха
+  oppressive heat: виснажлива спека
+  a sandstorm, or scorching heat: піщана буря або пекельна спека
+  # Polar cold
+  clear and freezing: ясно й морозно
+  extreme cold: лютий мороз
+  cloudy and frigid: хмарно, сильний мороз
+  light snow: невеликий сніг
+  heavy snow: сильний снігопад

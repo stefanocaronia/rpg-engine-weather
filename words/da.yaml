@@ -1,0 +1,48 @@
+# The words of the weather in Danish, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: vejret efter klimascoren, af Stefano Caronia
+about: himlen skifter ved hvert daggry med et slag, med årstiderne, hede ørkener, polarkulde og tåge
+words:
+  Weather: Vejr
+  Today's weather: Dagens vejr
+  Heavy fog this morning: Tæt tåge her til morgen
+  Light fog this morning: Let tåge her til morgen
+  It may change in the afternoon: Det kan slå om i løbet af eftermiddagen
+  Hot desert: Hed ørken
+  Polar cold: Polarkulde
+  # Winter
+  clear and cool: klart og køligt
+  sunny and cold: solrigt og koldt
+  cloudy and cold: overskyet og koldt
+  fine, cold rain: kold støvregn
+  light or heavy snow: sne, let eller kraftig
+  a snowstorm: snestorm
+  # Spring
+  clear and warm: klart og varmt
+  sunny and mild: solrigt og mildt
+  partly cloudy: delvis skyet
+  cloudy with showers: skyet med byger
+  rain: regn
+  heavy rain and wind: kraftig regn og blæst
+  # Summer
+  clear with a breeze: klart med en let brise
+  clear and hot: klart og hedt
+  sunny and hot: solrigt og hedt
+  a summer thunderstorm, or hail: sommertordenvejr, eller hagl
+  a heat wave: hedebølge
+  # Autumn
+  clear and mild: klart og mildt
+  sunny and cool: solrigt og køligt
+  scattered rain: spredte byger
+  strong wind: hård vind
+  # Hot deserts
+  partly cloudy and bearable: delvis skyet og til at holde ud
+  blazing sun: bagende sol
+  sultry heat: lummerhede
+  oppressive heat: trykkende hede
+  a sandstorm, or scorching heat: sandstorm, eller brændende hede
+  # Polar cold
+  clear and freezing: klart og isnende koldt
+  extreme cold: ekstrem kulde
+  cloudy and frigid: overskyet og bidende koldt
+  light snow: let sne
+  heavy snow: kraftigt snefald

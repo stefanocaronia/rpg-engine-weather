@@ -1,0 +1,49 @@
+# The words of the weather in Japanese, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: 気候スコアによる天気（Stefano Caronia作）
+about: 夜明けごとのロールで空模様が変わります。季節、暑い砂漠、極地の寒さ、霧もあります
+words:
+  Weather: 天気
+  Today's weather: 今日の天気
+  Heavy fog this morning: 今朝は濃い霧
+  Light fog this morning: 今朝は薄い霧
+  It may change in the afternoon: 午後に変わるかもしれません
+  Hot desert: 暑い砂漠
+  Polar cold: 極寒
+  "{sky}, {range}": "{sky}、{range}"
+  # Winter
+  clear and cool: 快晴で涼しい
+  sunny and cold: 晴れて寒い
+  cloudy and cold: 曇りで寒い
+  fine, cold rain: 冷たい霧雨
+  light or heavy snow: 雪（小雪または大雪）
+  a snowstorm: 吹雪
+  # Spring
+  clear and warm: 快晴で暖かい
+  sunny and mild: 晴れて穏やか
+  partly cloudy: 晴れ時々曇り
+  cloudy with showers: 曇り時々にわか雨
+  rain: 雨
+  heavy rain and wind: 強い雨と風
+  # Summer
+  clear with a breeze: 快晴でそよ風
+  clear and hot: 快晴で暑い
+  sunny and hot: 晴れて暑い
+  a summer thunderstorm, or hail: 夏の雷雨、または雹
+  a heat wave: 熱波
+  # Autumn
+  clear and mild: 快晴で穏やか
+  sunny and cool: 晴れて涼しい
+  scattered rain: ところにより雨
+  strong wind: 強風
+  # Hot deserts
+  partly cloudy and bearable: 晴れ時々曇り、しのげる暑さ
+  blazing sun: 照りつける日差し
+  sultry heat: 蒸し暑さ
+  oppressive heat: うだるような暑さ
+  a sandstorm, or scorching heat: 砂嵐、または焼けつく暑さ
+  # Polar cold
+  clear and freezing: 快晴で凍える寒さ
+  extreme cold: 極度の寒さ
+  cloudy and frigid: 曇りで厳しい寒さ
+  light snow: 小雪
+  heavy snow: 大雪

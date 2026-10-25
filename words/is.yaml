@@ -1,0 +1,48 @@
+# The words of the weather in Icelandic, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: veðrið samkvæmt loftslagsskori, eftir Stefano Caronia
+about: himinninn breytist við hverja dögun með kasti, með árstíðunum, heitum eyðimörkum, heimskautakulda og þoku
+words:
+  Weather: Veður
+  Today's weather: Veðrið í dag
+  Heavy fog this morning: Þétt þoka í morgun
+  Light fog this morning: Létt þoka í morgun
+  It may change in the afternoon: Það gæti breyst síðdegis
+  Hot desert: Heit eyðimörk
+  Polar cold: Heimskautakuldi
+  # Winter
+  clear and cool: heiðskírt og svalt
+  sunny and cold: sól og kalt
+  cloudy and cold: skýjað og kalt
+  fine, cold rain: kaldur úði
+  light or heavy snow: snjókoma, lítil eða mikil
+  a snowstorm: stórhríð
+  # Spring
+  clear and warm: heiðskírt og hlýtt
+  sunny and mild: sól og milt
+  partly cloudy: hálfskýjað
+  cloudy with showers: skýjað með skúrum
+  rain: rigning
+  heavy rain and wind: mikil rigning og vindur
+  # Summer
+  clear with a breeze: heiðskírt með golu
+  clear and hot: heiðskírt og heitt
+  sunny and hot: sól og heitt
+  a summer thunderstorm, or hail: sumarþrumuveður, eða hagl
+  a heat wave: hitabylgja
+  # Autumn
+  clear and mild: heiðskírt og milt
+  sunny and cool: sól og svalt
+  scattered rain: skúrir á stöku stað
+  strong wind: hvassviðri
+  # Hot deserts
+  partly cloudy and bearable: hálfskýjað og bærilegt
+  blazing sun: brennandi sól
+  sultry heat: mollulegur hiti
+  oppressive heat: þrúgandi hiti
+  a sandstorm, or scorching heat: sandstormur, eða steikjandi hiti
+  # Polar cold
+  clear and freezing: heiðskírt og frost
+  extreme cold: aftakakuldi
+  cloudy and frigid: skýjað og nístingskalt
+  light snow: lítil snjókoma
+  heavy snow: mikil snjókoma

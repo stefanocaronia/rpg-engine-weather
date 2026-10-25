@@ -1,0 +1,48 @@
+# The words of the weather in Hebrew, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: מזג האוויר לפי ניקוד האקלים, מאת Stefano Caronia
+about: השמיים משתנים בכל שחר לפי הטלה, עם עונות השנה, מדבריות חמים, קור קוטבי וערפל
+words:
+  Weather: מזג אוויר
+  Today's weather: מזג האוויר היום
+  Heavy fog this morning: ערפל כבד הבוקר
+  Light fog this morning: ערפל קל הבוקר
+  It may change in the afternoon: עשוי להשתנות אחר הצהריים
+  Hot desert: מדבר חם
+  Polar cold: קור קוטבי
+  # Winter
+  clear and cool: בהיר וקריר
+  sunny and cold: שמשי וקר
+  cloudy and cold: מעונן וקר
+  fine, cold rain: טפטוף קר
+  light or heavy snow: שלג, קל או כבד
+  a snowstorm: סופת שלגים
+  # Spring
+  clear and warm: בהיר וחמים
+  sunny and mild: שמשי ונעים
+  partly cloudy: מעונן חלקית
+  cloudy with showers: מעונן עם ממטרים
+  rain: גשם
+  heavy rain and wind: גשם כבד ורוח
+  # Summer
+  clear with a breeze: בהיר עם בריזה
+  clear and hot: בהיר וחם
+  sunny and hot: שמשי וחם
+  a summer thunderstorm, or hail: סופת רעמים קיצית, או ברד
+  a heat wave: גל חום
+  # Autumn
+  clear and mild: בהיר ונעים
+  sunny and cool: שמשי וקריר
+  scattered rain: גשם מקומי
+  strong wind: רוח חזקה
+  # Hot deserts
+  partly cloudy and bearable: מעונן חלקית ונסבל
+  blazing sun: שמש קופחת
+  sultry heat: חום הביל
+  oppressive heat: חום מעיק
+  a sandstorm, or scorching heat: סופת חול, או חום לוהט
+  # Polar cold
+  clear and freezing: בהיר וקפוא
+  extreme cold: קור קיצוני
+  cloudy and frigid: מעונן וקר מקפיא
+  light snow: שלג קל
+  heavy snow: שלג כבד

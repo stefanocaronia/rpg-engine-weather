@@ -1,0 +1,48 @@
+# The words of the weather in French, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: la météo selon le score de climat, par Stefano Caronia
+about: le ciel change à chaque aube sur un jet, avec les saisons, les déserts chauds, le froid polaire et le brouillard
+words:
+  Weather: Météo
+  Today's weather: La météo du jour
+  Heavy fog this morning: Brouillard épais ce matin
+  Light fog this morning: Brume légère ce matin
+  It may change in the afternoon: Le temps peut changer dans l'après-midi
+  Hot desert: Désert chaud
+  Polar cold: Froid polaire
+  # Winter
+  clear and cool: dégagé et frais
+  sunny and cold: ensoleillé et froid
+  cloudy and cold: nuageux et froid
+  fine, cold rain: bruine froide
+  light or heavy snow: neige, légère ou forte
+  a snowstorm: tempête de neige
+  # Spring
+  clear and warm: dégagé et tiède
+  sunny and mild: ensoleillé et doux
+  partly cloudy: partiellement nuageux
+  cloudy with showers: nuageux avec averses
+  rain: pluie
+  heavy rain and wind: forte pluie et vent
+  # Summer
+  clear with a breeze: dégagé avec une brise
+  clear and hot: dégagé et chaud
+  sunny and hot: ensoleillé et chaud
+  a summer thunderstorm, or hail: orage d'été, ou grêle
+  a heat wave: canicule
+  # Autumn
+  clear and mild: dégagé et doux
+  sunny and cool: ensoleillé et frais
+  scattered rain: pluies éparses
+  strong wind: vent fort
+  # Hot deserts
+  partly cloudy and bearable: partiellement nuageux et supportable
+  blazing sun: soleil de plomb
+  sultry heat: chaleur moite
+  oppressive heat: chaleur accablante
+  a sandstorm, or scorching heat: tempête de sable, ou chaleur torride
+  # Polar cold
+  clear and freezing: dégagé et glacial
+  extreme cold: froid extrême
+  cloudy and frigid: nuageux et glacé
+  light snow: neige légère
+  heavy snow: neige abondante

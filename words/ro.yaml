@@ -1,0 +1,48 @@
+# The words of the weather in Romanian, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: vremea după scorul climei, de Stefano Caronia
+about: cerul se schimbă la fiecare răsărit după o aruncare, cu anotimpuri, deșerturi fierbinți, ger polar și ceață
+words:
+  Weather: Vremea
+  Today's weather: Vremea de azi
+  Heavy fog this morning: Ceață densă în dimineața asta
+  Light fog this morning: Ceață ușoară în dimineața asta
+  It may change in the afternoon: Se poate schimba după-amiază
+  Hot desert: Deșert fierbinte
+  Polar cold: Ger polar
+  # Winter
+  clear and cool: senin și răcoros
+  sunny and cold: însorit și rece
+  cloudy and cold: înnorat și rece
+  fine, cold rain: burniță rece
+  light or heavy snow: ninsoare, slabă sau abundentă
+  a snowstorm: viscol
+  # Spring
+  clear and warm: senin și cald
+  sunny and mild: însorit și blând
+  partly cloudy: parțial noros
+  cloudy with showers: înnorat, cu averse
+  rain: ploaie
+  heavy rain and wind: ploaie puternică și vânt
+  # Summer
+  clear with a breeze: senin, cu briză
+  clear and hot: senin și foarte cald
+  sunny and hot: însorit și foarte cald
+  a summer thunderstorm, or hail: furtună de vară, sau grindină
+  a heat wave: caniculă
+  # Autumn
+  clear and mild: senin și blând
+  sunny and cool: însorit și răcoros
+  scattered rain: ploi izolate
+  strong wind: vânt puternic
+  # Hot deserts
+  partly cloudy and bearable: parțial noros și suportabil
+  blazing sun: soare arzător
+  sultry heat: zăpușeală
+  oppressive heat: arșiță apăsătoare
+  a sandstorm, or scorching heat: furtună de nisip, sau arșiță toridă
+  # Polar cold
+  clear and freezing: senin și geros
+  extreme cold: frig extrem
+  cloudy and frigid: înnorat și ger cumplit
+  light snow: ninsoare slabă
+  heavy snow: ninsoare abundentă

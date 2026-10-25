@@ -1,0 +1,48 @@
+# The words of the weather in German, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: das Wetter nach dem Klimawert, von Stefano Caronia
+about: der Himmel ändert sich mit jedem Morgengrauen durch einen Wurf, mit den Jahreszeiten, heißen Wüsten, Polarkälte und Nebel
+words:
+  Weather: Wetter
+  Today's weather: Das Wetter heute
+  Heavy fog this morning: Dichter Nebel heute Morgen
+  Light fog this morning: Leichter Nebel heute Morgen
+  It may change in the afternoon: Am Nachmittag kann es umschlagen
+  Hot desert: Heiße Wüste
+  Polar cold: Polarkälte
+  # Winter
+  clear and cool: klar und kühl
+  sunny and cold: sonnig und kalt
+  cloudy and cold: bewölkt und kalt
+  fine, cold rain: kalter Nieselregen
+  light or heavy snow: Schnee, leicht oder stark
+  a snowstorm: Schneesturm
+  # Spring
+  clear and warm: klar und warm
+  sunny and mild: sonnig und mild
+  partly cloudy: teils bewölkt
+  cloudy with showers: bewölkt mit Schauern
+  rain: Regen
+  heavy rain and wind: starker Regen und Wind
+  # Summer
+  clear with a breeze: klar mit leichter Brise
+  clear and hot: klar und heiß
+  sunny and hot: sonnig und heiß
+  a summer thunderstorm, or hail: Sommergewitter oder Hagel
+  a heat wave: Hitzewelle
+  # Autumn
+  clear and mild: klar und mild
+  sunny and cool: sonnig und kühl
+  scattered rain: vereinzelt Regen
+  strong wind: starker Wind
+  # Hot deserts
+  partly cloudy and bearable: teils bewölkt und erträglich
+  blazing sun: sengende Sonne
+  sultry heat: Schwüle
+  oppressive heat: drückende Hitze
+  a sandstorm, or scorching heat: Sandsturm oder glühende Hitze
+  # Polar cold
+  clear and freezing: klar und eisig
+  extreme cold: extreme Kälte
+  cloudy and frigid: bewölkt und bitterkalt
+  light snow: leichter Schnee
+  heavy snow: starker Schneefall

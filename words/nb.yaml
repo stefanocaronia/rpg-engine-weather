@@ -1,0 +1,48 @@
+# The words of the weather in Norwegian Bokmål, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: været etter klimaskåren, av Stefano Caronia
+about: himmelen skifter ved hvert daggry med et kast, med årstidene, hete ørkener, polarkulde og tåke
+words:
+  Weather: Vær
+  Today's weather: Dagens vær
+  Heavy fog this morning: Tett tåke i morges
+  Light fog this morning: Lett tåke i morges
+  It may change in the afternoon: Det kan slå om i løpet av ettermiddagen
+  Hot desert: Het ørken
+  Polar cold: Polarkulde
+  # Winter
+  clear and cool: klart og kjølig
+  sunny and cold: sol og kaldt
+  cloudy and cold: overskyet og kaldt
+  fine, cold rain: kaldt yr
+  light or heavy snow: snø, lett eller tett
+  a snowstorm: snøstorm
+  # Spring
+  clear and warm: klart og varmt
+  sunny and mild: sol og mildt
+  partly cloudy: delvis skyet
+  cloudy with showers: skyet med byger
+  rain: regn
+  heavy rain and wind: kraftig regn og vind
+  # Summer
+  clear with a breeze: klart med lett bris
+  clear and hot: klart og hett
+  sunny and hot: sol og hett
+  a summer thunderstorm, or hail: sommertorden, eller hagl
+  a heat wave: hetebølge
+  # Autumn
+  clear and mild: klart og mildt
+  sunny and cool: sol og kjølig
+  scattered rain: spredte regnbyger
+  strong wind: sterk vind
+  # Hot deserts
+  partly cloudy and bearable: delvis skyet og til å holde ut
+  blazing sun: stekende sol
+  sultry heat: lummer hete
+  oppressive heat: trykkende hete
+  a sandstorm, or scorching heat: sandstorm, eller brennende hete
+  # Polar cold
+  clear and freezing: klart og iskaldt
+  extreme cold: ekstrem kulde
+  cloudy and frigid: overskyet og bitende kaldt
+  light snow: lett snø
+  heavy snow: kraftig snøfall

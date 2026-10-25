@@ -1,0 +1,48 @@
+# The words of the weather in Dutch, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: het weer volgens de klimaatscore, door Stefano Caronia
+about: de lucht verandert bij elke dageraad met een worp, met de seizoenen, hete woestijnen, poolkou en mist
+words:
+  Weather: Weer
+  Today's weather: Het weer vandaag
+  Heavy fog this morning: Dichte mist vanochtend
+  Light fog this morning: Lichte mist vanochtend
+  It may change in the afternoon: Het kan 's middags omslaan
+  Hot desert: Hete woestijn
+  Polar cold: Poolkou
+  # Winter
+  clear and cool: helder en fris
+  sunny and cold: zonnig en koud
+  cloudy and cold: bewolkt en koud
+  fine, cold rain: koude motregen
+  light or heavy snow: sneeuw, licht of zwaar
+  a snowstorm: sneeuwstorm
+  # Spring
+  clear and warm: helder en warm
+  sunny and mild: zonnig en zacht
+  partly cloudy: half bewolkt
+  cloudy with showers: bewolkt met buien
+  rain: regen
+  heavy rain and wind: zware regen en wind
+  # Summer
+  clear with a breeze: helder met een briesje
+  clear and hot: helder en heet
+  sunny and hot: zonnig en heet
+  a summer thunderstorm, or hail: zomers onweer, of hagel
+  a heat wave: hittegolf
+  # Autumn
+  clear and mild: helder en zacht
+  sunny and cool: zonnig en fris
+  scattered rain: hier en daar regen
+  strong wind: harde wind
+  # Hot deserts
+  partly cloudy and bearable: half bewolkt en draaglijk
+  blazing sun: brandende zon
+  sultry heat: zwoele hitte
+  oppressive heat: drukkende hitte
+  a sandstorm, or scorching heat: zandstorm, of verzengende hitte
+  # Polar cold
+  clear and freezing: helder en ijskoud
+  extreme cold: extreme kou
+  cloudy and frigid: bewolkt en bitterkoud
+  light snow: lichte sneeuw
+  heavy snow: zware sneeuwval

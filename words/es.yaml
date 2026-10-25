@@ -1,0 +1,48 @@
+# The words of the weather in Spanish, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: el tiempo según la puntuación de clima, de Stefano Caronia
+about: el cielo cambia en cada amanecer con una tirada, con las estaciones, los desiertos cálidos, el frío polar y la niebla
+words:
+  Weather: El tiempo
+  Today's weather: El tiempo de hoy
+  Heavy fog this morning: Niebla densa esta mañana
+  Light fog this morning: Niebla ligera esta mañana
+  It may change in the afternoon: Puede cambiar por la tarde
+  Hot desert: Desierto cálido
+  Polar cold: Frío polar
+  # Winter
+  clear and cool: despejado y fresco
+  sunny and cold: soleado y frío
+  cloudy and cold: nublado y frío
+  fine, cold rain: llovizna fría
+  light or heavy snow: nieve, ligera o intensa
+  a snowstorm: ventisca
+  # Spring
+  clear and warm: despejado y cálido
+  sunny and mild: soleado y templado
+  partly cloudy: parcialmente nublado
+  cloudy with showers: nublado con chubascos
+  rain: lluvia
+  heavy rain and wind: lluvia fuerte y viento
+  # Summer
+  clear with a breeze: despejado con brisa
+  clear and hot: despejado y caluroso
+  sunny and hot: soleado y caluroso
+  a summer thunderstorm, or hail: tormenta de verano, o granizo
+  a heat wave: ola de calor
+  # Autumn
+  clear and mild: despejado y templado
+  sunny and cool: soleado y fresco
+  scattered rain: lluvias dispersas
+  strong wind: viento fuerte
+  # Hot deserts
+  partly cloudy and bearable: parcialmente nublado y soportable
+  blazing sun: sol abrasador
+  sultry heat: bochorno
+  oppressive heat: calor sofocante
+  a sandstorm, or scorching heat: tormenta de arena, o calor tórrido
+  # Polar cold
+  clear and freezing: despejado y helado
+  extreme cold: frío extremo
+  cloudy and frigid: nublado y gélido
+  light snow: nieve ligera
+  heavy snow: nevada intensa

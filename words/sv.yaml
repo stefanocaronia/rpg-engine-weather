@@ -1,0 +1,48 @@
+# The words of the weather in Swedish, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: vädret efter klimatpoängen, av Stefano Caronia
+about: himlen skiftar vid varje gryning med ett slag, med årstiderna, heta öknar, polarkyla och dimma
+words:
+  Weather: Väder
+  Today's weather: Dagens väder
+  Heavy fog this morning: Tät dimma i morse
+  Light fog this morning: Lätt dimma i morse
+  It may change in the afternoon: Det kan slå om under eftermiddagen
+  Hot desert: Het öken
+  Polar cold: Polarkyla
+  # Winter
+  clear and cool: klart och svalt
+  sunny and cold: soligt och kallt
+  cloudy and cold: mulet och kallt
+  fine, cold rain: kallt duggregn
+  light or heavy snow: snö, lätt eller tät
+  a snowstorm: snöstorm
+  # Spring
+  clear and warm: klart och varmt
+  sunny and mild: soligt och milt
+  partly cloudy: halvklart
+  cloudy with showers: mulet med skurar
+  rain: regn
+  heavy rain and wind: kraftigt regn och blåst
+  # Summer
+  clear with a breeze: klart med en bris
+  clear and hot: klart och hett
+  sunny and hot: soligt och hett
+  a summer thunderstorm, or hail: sommaråska, eller hagel
+  a heat wave: värmebölja
+  # Autumn
+  clear and mild: klart och milt
+  sunny and cool: soligt och svalt
+  scattered rain: spridda skurar
+  strong wind: hård vind
+  # Hot deserts
+  partly cloudy and bearable: halvklart och uthärdligt
+  blazing sun: gassande sol
+  sultry heat: kvav hetta
+  oppressive heat: tryckande hetta
+  a sandstorm, or scorching heat: sandstorm, eller brännande hetta
+  # Polar cold
+  clear and freezing: klart och iskallt
+  extreme cold: extrem kyla
+  cloudy and frigid: mulet och bitande kallt
+  light snow: lätt snöfall
+  heavy snow: kraftigt snöfall

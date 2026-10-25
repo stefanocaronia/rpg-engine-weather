@@ -1,0 +1,49 @@
+# The words of the weather in Arabic, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: الطقس حسب درجة المناخ، من تأليف Stefano Caronia
+about: تتغير السماء مع كل فجر برمية، مع الفصول والصحاري الحارة والبرد القطبي والضباب
+words:
+  Weather: الطقس
+  Today's weather: طقس اليوم
+  Heavy fog this morning: ضباب كثيف هذا الصباح
+  Light fog this morning: ضباب خفيف هذا الصباح
+  It may change in the afternoon: قد يتغير بعد الظهر
+  Hot desert: صحراء حارة
+  Polar cold: برد قطبي
+  "{sky}, {range}": "{sky}، {range}"
+  # Winter
+  clear and cool: صافٍ ومنعش
+  sunny and cold: مشمس وبارد
+  cloudy and cold: غائم وبارد
+  fine, cold rain: رذاذ بارد
+  light or heavy snow: ثلج، خفيف أو كثيف
+  a snowstorm: عاصفة ثلجية
+  # Spring
+  clear and warm: صافٍ ودافئ
+  sunny and mild: مشمس ومعتدل
+  partly cloudy: غائم جزئيًا
+  cloudy with showers: غائم مع زخات مطر
+  rain: مطر
+  heavy rain and wind: أمطار غزيرة ورياح
+  # Summer
+  clear with a breeze: صافٍ مع نسيم
+  clear and hot: صافٍ وحار
+  sunny and hot: مشمس وحار
+  a summer thunderstorm, or hail: عاصفة رعدية صيفية، أو برَد
+  a heat wave: موجة حر
+  # Autumn
+  clear and mild: صافٍ ومعتدل
+  sunny and cool: مشمس ومنعش
+  scattered rain: أمطار متفرقة
+  strong wind: رياح قوية
+  # Hot deserts
+  partly cloudy and bearable: غائم جزئيًا والحر محتمل
+  blazing sun: شمس حارقة
+  sultry heat: قيظ رطب
+  oppressive heat: حر شديد
+  a sandstorm, or scorching heat: عاصفة رملية، أو حر لاهب
+  # Polar cold
+  clear and freezing: صافٍ وقارس البرودة
+  extreme cold: برد قارس
+  cloudy and frigid: غائم وشديد البرودة
+  light snow: ثلج خفيف
+  heavy snow: ثلج كثيف

@@ -1,0 +1,48 @@
+# The words of the weather in Polish, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: pogoda według punktacji klimatu, autor Stefano Caronia
+about: niebo zmienia się o każdym świcie za sprawą rzutu, z porami roku, gorącymi pustyniami, polarnym mrozem i mgłą
+words:
+  Weather: Pogoda
+  Today's weather: Dzisiejsza pogoda
+  Heavy fog this morning: Gęsta mgła dziś rano
+  Light fog this morning: Lekka mgła dziś rano
+  It may change in the afternoon: Po południu może się zmienić
+  Hot desert: Gorąca pustynia
+  Polar cold: Polarny mróz
+  # Winter
+  clear and cool: pogodnie i chłodno
+  sunny and cold: słonecznie i zimno
+  cloudy and cold: pochmurno i zimno
+  fine, cold rain: zimna mżawka
+  light or heavy snow: śnieg, słaby lub intensywny
+  a snowstorm: śnieżyca
+  # Spring
+  clear and warm: pogodnie i ciepło
+  sunny and mild: słonecznie i łagodnie
+  partly cloudy: częściowe zachmurzenie
+  cloudy with showers: pochmurno z przelotnymi opadami
+  rain: deszcz
+  heavy rain and wind: ulewa i wiatr
+  # Summer
+  clear with a breeze: pogodnie, lekki wiaterek
+  clear and hot: pogodnie i gorąco
+  sunny and hot: słonecznie i gorąco
+  a summer thunderstorm, or hail: letnia burza lub grad
+  a heat wave: fala upałów
+  # Autumn
+  clear and mild: pogodnie i łagodnie
+  sunny and cool: słonecznie i chłodno
+  scattered rain: przelotny deszcz
+  strong wind: silny wiatr
+  # Hot deserts
+  partly cloudy and bearable: częściowe zachmurzenie, znośnie
+  blazing sun: palące słońce
+  sultry heat: duchota
+  oppressive heat: dokuczliwy upał
+  a sandstorm, or scorching heat: burza piaskowa lub skwar
+  # Polar cold
+  clear and freezing: pogodnie i mroźno
+  extreme cold: siarczysty mróz
+  cloudy and frigid: pochmurno i przenikliwie zimno
+  light snow: słaby śnieg
+  heavy snow: intensywne opady śniegu

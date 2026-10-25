@@ -1,0 +1,48 @@
+# The words of the weather in Hindi, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: जलवायु अंक के अनुसार मौसम, Stefano Caronia का
+about: हर भोर एक रोल से आसमान बदलता है, ऋतुओं, गर्म रेगिस्तानों, ध्रुवीय ठंड और कोहरे के साथ
+words:
+  Weather: मौसम
+  Today's weather: आज का मौसम
+  Heavy fog this morning: आज सुबह घना कोहरा
+  Light fog this morning: आज सुबह हल्का कोहरा
+  It may change in the afternoon: दोपहर में बदल सकता है
+  Hot desert: गर्म रेगिस्तान
+  Polar cold: ध्रुवीय ठंड
+  # Winter
+  clear and cool: साफ़ आसमान, हल्की ठंडक
+  sunny and cold: धूप और ठंड
+  cloudy and cold: बादल और ठंड
+  fine, cold rain: ठंडी फुहार
+  light or heavy snow: बर्फ़बारी, हल्की या भारी
+  a snowstorm: बर्फ़ीला तूफ़ान
+  # Spring
+  clear and warm: साफ़ आसमान, हल्की गर्मी
+  sunny and mild: धूप और सुहाना मौसम
+  partly cloudy: आंशिक बादल
+  cloudy with showers: बादल और बौछारें
+  rain: बारिश
+  heavy rain and wind: तेज़ बारिश और हवा
+  # Summer
+  clear with a breeze: साफ़ आसमान, हल्की हवा
+  clear and hot: साफ़ आसमान, गर्मी
+  sunny and hot: तेज़ धूप और गर्मी
+  a summer thunderstorm, or hail: गर्मियों का आँधी-तूफ़ान, या ओले
+  a heat wave: लू
+  # Autumn
+  clear and mild: साफ़ और सुहाना
+  sunny and cool: धूप और ठंडक
+  scattered rain: कहीं-कहीं बारिश
+  strong wind: तेज़ हवा
+  # Hot deserts
+  partly cloudy and bearable: आंशिक बादल, सहने लायक गर्मी
+  blazing sun: चिलचिलाती धूप
+  sultry heat: उमस
+  oppressive heat: दमघोंटू गर्मी
+  a sandstorm, or scorching heat: रेत का तूफ़ान, या झुलसाती गर्मी
+  # Polar cold
+  clear and freezing: साफ़ आसमान, कड़ाके की ठंड
+  extreme cold: भीषण ठंड
+  cloudy and frigid: बादल और हाड़ कँपाती ठंड
+  light snow: हल्की बर्फ़बारी
+  heavy snow: भारी बर्फ़बारी

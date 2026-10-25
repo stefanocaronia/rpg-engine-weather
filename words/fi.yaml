@@ -1,0 +1,48 @@
+# The words of the weather in Finnish, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: sää ilmastopisteiden mukaan, tekijä Stefano Caronia
+about: taivas muuttuu joka aamunkoitteessa heiton mukaan, ja mukana ovat vuodenajat, kuumat aavikot, napapakkanen ja sumu
+words:
+  Weather: Sää
+  Today's weather: Tämän päivän sää
+  Heavy fog this morning: Sakeaa sumua tänä aamuna
+  Light fog this morning: Kevyttä sumua tänä aamuna
+  It may change in the afternoon: Sää voi muuttua iltapäivällä
+  Hot desert: Kuuma aavikko
+  Polar cold: Napapakkanen
+  # Winter
+  clear and cool: selkeää ja viileää
+  sunny and cold: aurinkoista ja kylmää
+  cloudy and cold: pilvistä ja kylmää
+  fine, cold rain: kylmää tihkusadetta
+  light or heavy snow: lumisadetta, heikkoa tai sakeaa
+  a snowstorm: lumimyrsky
+  # Spring
+  clear and warm: selkeää ja lämmintä
+  sunny and mild: aurinkoista ja leutoa
+  partly cloudy: puolipilvistä
+  cloudy with showers: pilvistä ja sadekuuroja
+  rain: sadetta
+  heavy rain and wind: rankkasadetta ja tuulta
+  # Summer
+  clear with a breeze: selkeää ja vieno tuuli
+  clear and hot: selkeää ja kuumaa
+  sunny and hot: aurinkoista ja kuumaa
+  a summer thunderstorm, or hail: kesäukkonen tai raekuuro
+  a heat wave: helleaalto
+  # Autumn
+  clear and mild: selkeää ja leutoa
+  sunny and cool: aurinkoista ja viileää
+  scattered rain: paikoin sadetta
+  strong wind: kova tuuli
+  # Hot deserts
+  partly cloudy and bearable: puolipilvistä ja siedettävää
+  blazing sun: paahtava aurinko
+  sultry heat: tukala helle
+  oppressive heat: painostava helle
+  a sandstorm, or scorching heat: hiekkamyrsky tai polttava helle
+  # Polar cold
+  clear and freezing: selkeää ja pakkasta
+  extreme cold: äärimmäinen pakkanen
+  cloudy and frigid: pilvistä ja purevaa pakkasta
+  light snow: heikkoa lumisadetta
+  heavy snow: sakeaa lumisadetta

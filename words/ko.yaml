@@ -1,0 +1,48 @@
+# The words of the weather in Korean, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: 기후 점수에 따른 날씨, Stefano Caronia 제작
+about: 새벽마다 굴림으로 하늘이 바뀌어요. 계절, 뜨거운 사막, 극지의 추위, 안개도 있어요
+words:
+  Weather: 날씨
+  Today's weather: 오늘의 날씨
+  Heavy fog this morning: 오늘 아침 짙은 안개
+  Light fog this morning: 오늘 아침 옅은 안개
+  It may change in the afternoon: 오후에 바뀔 수 있어요
+  Hot desert: 뜨거운 사막
+  Polar cold: 극지 한파
+  # Winter
+  clear and cool: 맑고 선선함
+  sunny and cold: 화창하고 추움
+  cloudy and cold: 흐리고 추움
+  fine, cold rain: 차가운 이슬비
+  light or heavy snow: 약한 눈 또는 많은 눈
+  a snowstorm: 눈보라
+  # Spring
+  clear and warm: 맑고 따뜻함
+  sunny and mild: 화창하고 온화함
+  partly cloudy: 구름 조금
+  cloudy with showers: 흐리고 소나기
+  rain: 비
+  heavy rain and wind: 강한 비와 바람
+  # Summer
+  clear with a breeze: 맑고 산들바람
+  clear and hot: 맑고 더움
+  sunny and hot: 화창하고 더움
+  a summer thunderstorm, or hail: 여름 뇌우 또는 우박
+  a heat wave: 폭염
+  # Autumn
+  clear and mild: 맑고 온화함
+  sunny and cool: 화창하고 선선함
+  scattered rain: 곳에 따라 비
+  strong wind: 강풍
+  # Hot deserts
+  partly cloudy and bearable: 구름 조금, 견딜 만한 더위
+  blazing sun: 이글거리는 햇볕
+  sultry heat: 무더위
+  oppressive heat: 숨 막히는 더위
+  a sandstorm, or scorching heat: 모래폭풍 또는 타는 듯한 더위
+  # Polar cold
+  clear and freezing: 맑고 얼어붙는 추위
+  extreme cold: 혹한
+  cloudy and frigid: 흐리고 매서운 추위
+  light snow: 약한 눈
+  heavy snow: 폭설

@@ -1,0 +1,48 @@
+# The words of the weather in Hungarian, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: az időjárás a klímapontszám szerint, Stefano Caronia munkája
+about: az ég minden hajnalban egy dobás szerint változik, évszakokkal, forró sivatagokkal, sarki hideggel és köddel
+words:
+  Weather: Időjárás
+  Today's weather: Mai időjárás
+  Heavy fog this morning: Sűrű köd ma reggel
+  Light fog this morning: Gyenge köd ma reggel
+  It may change in the afternoon: Délután változhat
+  Hot desert: Forró sivatag
+  Polar cold: Sarki hideg
+  # Winter
+  clear and cool: derült és hűvös
+  sunny and cold: napos és hideg
+  cloudy and cold: felhős és hideg
+  fine, cold rain: hideg szitálás
+  light or heavy snow: havazás, gyenge vagy erős
+  a snowstorm: hóvihar
+  # Spring
+  clear and warm: derült és meleg
+  sunny and mild: napos és enyhe
+  partly cloudy: részben felhős
+  cloudy with showers: felhős, záporokkal
+  rain: eső
+  heavy rain and wind: heves eső és szél
+  # Summer
+  clear with a breeze: derült, enyhe szellővel
+  clear and hot: derült és forró
+  sunny and hot: napos és forró
+  a summer thunderstorm, or hail: nyári zivatar vagy jégeső
+  a heat wave: hőhullám
+  # Autumn
+  clear and mild: derült és enyhe
+  sunny and cool: napos és hűvös
+  scattered rain: helyenként eső
+  strong wind: erős szél
+  # Hot deserts
+  partly cloudy and bearable: részben felhős és elviselhető
+  blazing sun: tűző nap
+  sultry heat: fülledt hőség
+  oppressive heat: nyomasztó hőség
+  a sandstorm, or scorching heat: homokvihar vagy perzselő hőség
+  # Polar cold
+  clear and freezing: derült és fagyos
+  extreme cold: rendkívüli hideg
+  cloudy and frigid: felhős és dermesztő
+  light snow: gyenge havazás
+  heavy snow: erős havazás

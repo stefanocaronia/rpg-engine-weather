@@ -1,0 +1,48 @@
+# The words of the weather in Russian, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: погода по шкале климата, автор Stefano Caronia
+about: небо меняется с каждым рассветом по броску; есть времена года, жаркие пустыни, полярный холод и туман
+words:
+  Weather: Погода
+  Today's weather: Погода на сегодня
+  Heavy fog this morning: Утром густой туман
+  Light fog this morning: Утром лёгкий туман
+  It may change in the afternoon: После полудня погода может измениться
+  Hot desert: Жаркая пустыня
+  Polar cold: Полярный холод
+  # Winter
+  clear and cool: ясно и прохладно
+  sunny and cold: солнечно и холодно
+  cloudy and cold: облачно и холодно
+  fine, cold rain: мелкий холодный дождь
+  light or heavy snow: снег, слабый или сильный
+  a snowstorm: метель
+  # Spring
+  clear and warm: ясно и тепло
+  sunny and mild: солнечно и умеренно тепло
+  partly cloudy: переменная облачность
+  cloudy with showers: облачно, кратковременные дожди
+  rain: дождь
+  heavy rain and wind: сильный дождь и ветер
+  # Summer
+  clear with a breeze: ясно, лёгкий ветерок
+  clear and hot: ясно и жарко
+  sunny and hot: солнечно и жарко
+  a summer thunderstorm, or hail: летняя гроза или град
+  a heat wave: аномальная жара
+  # Autumn
+  clear and mild: ясно и умеренно тепло
+  sunny and cool: солнечно и прохладно
+  scattered rain: местами дождь
+  strong wind: сильный ветер
+  # Hot deserts
+  partly cloudy and bearable: переменная облачность, терпимо
+  blazing sun: палящее солнце
+  sultry heat: духота
+  oppressive heat: изнуряющая жара
+  a sandstorm, or scorching heat: песчаная буря или испепеляющая жара
+  # Polar cold
+  clear and freezing: ясно и морозно
+  extreme cold: лютый мороз
+  cloudy and frigid: облачно, сильный мороз
+  light snow: небольшой снег
+  heavy snow: сильный снегопад

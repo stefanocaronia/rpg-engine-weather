@@ -1,0 +1,48 @@
+# The words of the weather in Czech, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: počasí podle klimatického skóre, autor Stefano Caronia
+about: obloha se mění s každým svítáním podle hodu, s ročními obdobími, horkými pouštěmi, polárním mrazem a mlhou
+words:
+  Weather: Počasí
+  Today's weather: Dnešní počasí
+  Heavy fog this morning: Dnes ráno hustá mlha
+  Light fog this morning: Dnes ráno slabá mlha
+  It may change in the afternoon: Odpoledne se může změnit
+  Hot desert: Horká poušť
+  Polar cold: Polární mráz
+  # Winter
+  clear and cool: jasno a chladno
+  sunny and cold: slunečno a zima
+  cloudy and cold: zataženo a zima
+  fine, cold rain: studené mrholení
+  light or heavy snow: sníh, slabý nebo hustý
+  a snowstorm: sněhová bouře
+  # Spring
+  clear and warm: jasno a teplo
+  sunny and mild: slunečno a příjemně
+  partly cloudy: polojasno
+  cloudy with showers: zataženo s přeháňkami
+  rain: déšť
+  heavy rain and wind: silný déšť a vítr
+  # Summer
+  clear with a breeze: jasno s vánkem
+  clear and hot: jasno a horko
+  sunny and hot: slunečno a horko
+  a summer thunderstorm, or hail: letní bouřka nebo kroupy
+  a heat wave: vlna veder
+  # Autumn
+  clear and mild: jasno a příjemně
+  sunny and cool: slunečno a chladno
+  scattered rain: místy déšť
+  strong wind: silný vítr
+  # Hot deserts
+  partly cloudy and bearable: polojasno a snesitelně
+  blazing sun: spalující slunce
+  sultry heat: dusno
+  oppressive heat: tíživé vedro
+  a sandstorm, or scorching heat: písečná bouře nebo spalující vedro
+  # Polar cold
+  clear and freezing: jasno a mrazivo
+  extreme cold: krutý mráz
+  cloudy and frigid: zataženo a třeskutá zima
+  light snow: slabé sněžení
+  heavy snow: husté sněžení

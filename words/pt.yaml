@@ -1,0 +1,48 @@
+# The words of the weather in Portuguese (Brazil), as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: o clima pela pontuação climática, de Stefano Caronia
+about: o céu muda a cada amanhecer com uma rolagem, com as estações, os desertos quentes, o frio polar e a neblina
+words:
+  Weather: Clima
+  Today's weather: O clima hoje
+  Heavy fog this morning: Neblina densa esta manhã
+  Light fog this morning: Neblina leve esta manhã
+  It may change in the afternoon: Pode mudar à tarde
+  Hot desert: Deserto quente
+  Polar cold: Frio polar
+  # Winter
+  clear and cool: céu limpo e fresco
+  sunny and cold: ensolarado e frio
+  cloudy and cold: nublado e frio
+  fine, cold rain: garoa fria
+  light or heavy snow: neve, fraca ou forte
+  a snowstorm: nevasca
+  # Spring
+  clear and warm: céu limpo e quente
+  sunny and mild: ensolarado e ameno
+  partly cloudy: parcialmente nublado
+  cloudy with showers: nublado com pancadas de chuva
+  rain: chuva
+  heavy rain and wind: chuva forte e vento
+  # Summer
+  clear with a breeze: céu limpo com brisa
+  clear and hot: céu limpo e muito quente
+  sunny and hot: ensolarado e muito quente
+  a summer thunderstorm, or hail: tempestade de verão, ou granizo
+  a heat wave: onda de calor
+  # Autumn
+  clear and mild: céu limpo e ameno
+  sunny and cool: ensolarado e fresco
+  scattered rain: chuvas esparsas
+  strong wind: vento forte
+  # Hot deserts
+  partly cloudy and bearable: parcialmente nublado e suportável
+  blazing sun: sol escaldante
+  sultry heat: calor abafado
+  oppressive heat: calor sufocante
+  a sandstorm, or scorching heat: tempestade de areia, ou calor tórrido
+  # Polar cold
+  clear and freezing: céu limpo e gelado
+  extreme cold: frio extremo
+  cloudy and frigid: nublado e congelante
+  light snow: neve fraca
+  heavy snow: neve forte

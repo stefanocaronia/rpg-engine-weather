@@ -1,0 +1,48 @@
+# The words of the weather in Greek, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: ο καιρός με τη βαθμολογία του κλίματος, του Stefano Caronia
+about: ο ουρανός αλλάζει κάθε αυγή με μια ρίψη, με τις εποχές, τις καυτές ερήμους, το πολικό ψύχος και την ομίχλη
+words:
+  Weather: Καιρός
+  Today's weather: Ο καιρός σήμερα
+  Heavy fog this morning: Πυκνή ομίχλη σήμερα το πρωί
+  Light fog this morning: Ελαφριά ομίχλη σήμερα το πρωί
+  It may change in the afternoon: Μπορεί να αλλάξει το απόγευμα
+  Hot desert: Καυτή έρημος
+  Polar cold: Πολικό ψύχος
+  # Winter
+  clear and cool: αίθριος και δροσερός
+  sunny and cold: λιακάδα και κρύο
+  cloudy and cold: συννεφιά και κρύο
+  fine, cold rain: ψιλή, κρύα βροχή
+  light or heavy snow: χιόνι, ελαφρύ ή πυκνό
+  a snowstorm: χιονοθύελλα
+  # Spring
+  clear and warm: αίθριος και ζεστός
+  sunny and mild: λιακάδα, ήπιος καιρός
+  partly cloudy: μερική συννεφιά
+  cloudy with showers: συννεφιά με μπόρες
+  rain: βροχή
+  heavy rain and wind: δυνατή βροχή και αέρας
+  # Summer
+  clear with a breeze: αίθριος με αύρα
+  clear and hot: αίθριος και πολύ ζεστός
+  sunny and hot: λιακάδα και ζέστη
+  a summer thunderstorm, or hail: καλοκαιρινή καταιγίδα, ή χαλάζι
+  a heat wave: καύσωνας
+  # Autumn
+  clear and mild: αίθριος και ήπιος
+  sunny and cool: λιακάδα και δροσιά
+  scattered rain: σποραδικές βροχές
+  strong wind: δυνατός άνεμος
+  # Hot deserts
+  partly cloudy and bearable: μερική συννεφιά, υποφερτή ζέστη
+  blazing sun: καυτός ήλιος
+  sultry heat: αποπνικτική ζέστη
+  oppressive heat: αφόρητη ζέστη
+  a sandstorm, or scorching heat: αμμοθύελλα, ή πύρινη ζέστη
+  # Polar cold
+  clear and freezing: αίθριος και παγωμένος
+  extreme cold: ακραίο ψύχος
+  cloudy and frigid: συννεφιά και παγωνιά
+  light snow: ελαφριά χιονόπτωση
+  heavy snow: πυκνή χιονόπτωση

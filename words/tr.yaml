@@ -1,0 +1,48 @@
+# The words of the weather in Turkish, as the dashboard shows them (D-502): its title and line in Packages, and what its widgets write; from words/it.yaml.
+title: iklim puanına göre hava durumu, Stefano Caronia'dan
+about: gökyüzü her şafakta bir atışla değişir; mevsimler, sıcak çöller, kutup soğuğu ve sis ile
+words:
+  Weather: Hava durumu
+  Today's weather: Bugünkü hava
+  Heavy fog this morning: Bu sabah yoğun sis
+  Light fog this morning: Bu sabah hafif sis
+  It may change in the afternoon: Öğleden sonra değişebilir
+  Hot desert: Sıcak çöl
+  Polar cold: Kutup soğuğu
+  # Winter
+  clear and cool: açık ve serin
+  sunny and cold: güneşli ve soğuk
+  cloudy and cold: bulutlu ve soğuk
+  fine, cold rain: soğuk çisenti
+  light or heavy snow: hafif ya da yoğun kar
+  a snowstorm: kar fırtınası
+  # Spring
+  clear and warm: açık ve ılık
+  sunny and mild: güneşli ve ılıman
+  partly cloudy: parçalı bulutlu
+  cloudy with showers: bulutlu, sağanak yağışlı
+  rain: yağmur
+  heavy rain and wind: şiddetli yağmur ve rüzgâr
+  # Summer
+  clear with a breeze: açık, hafif esintili
+  clear and hot: açık ve sıcak
+  sunny and hot: güneşli ve sıcak
+  a summer thunderstorm, or hail: gök gürültülü yaz fırtınası ya da dolu
+  a heat wave: sıcak hava dalgası
+  # Autumn
+  clear and mild: açık ve ılıman
+  sunny and cool: güneşli ve serin
+  scattered rain: yer yer yağmur
+  strong wind: kuvvetli rüzgâr
+  # Hot deserts
+  partly cloudy and bearable: parçalı bulutlu ve katlanılabilir
+  blazing sun: kavurucu güneş
+  sultry heat: bunaltıcı sıcak
+  oppressive heat: boğucu sıcak
+  a sandstorm, or scorching heat: kum fırtınası ya da yakıcı sıcak
+  # Polar cold
+  clear and freezing: açık ve dondurucu
+  extreme cold: aşırı soğuk
+  cloudy and frigid: bulutlu ve buz gibi
+  light snow: hafif kar
+  heavy snow: yoğun kar
