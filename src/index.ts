@@ -9,7 +9,7 @@ import { afternoonChange, coldColumn, type Fog, morningChange, reading, type Sea
  */
 type WeatherState = Weather | { off: true; };
 
-type Weather = { score: number; day: number; variable?: boolean; fog?: Fog; zone?: Zone; };
+type Weather = { score: number; day: number; variable?: boolean; fog?: Fog; zone?: Zone; rolled?: number; };
 
 /** A moment the weather changes at: a dawn or the afternoon of a day. */
 interface Turn
@@ -36,7 +36,7 @@ const weather: ExtensionEntry = ({ z }) => ({
         },
         {
             name: "weather-set",
-            description: "Set the weather, when the story changes it (a spell, a storm you decide): its score on the scale weather gives for this season and place, "
+            description: "Set the weather, for a spell or the weather a page written before play gives: its score on the scale weather gives for this season and place, "
                 + "from 6, the mildest, to 1, its extreme, which in summer is a heat wave; the morning's fog, until noon; or both. What you leave out stays. "
                 + "It changes again at the next dawn. Example: weather-set 2, why the druid's storm; or fog heavy, why the valley's page.",
             input: z.object({
@@ -115,13 +115,18 @@ const weather: ExtensionEntry = ({ z }) => ({
 
 export default weather;
 
-/** The weather weather-set leaves: the score given, or the one there was; the fog given, or the morning's; the afternoon's roll only while the score stays. */
+/**
+ * The weather weather-set leaves: the score given, or the one there was; the fog given, or the morning's; the afternoon's roll only while the score stays; and
+ * the score the dice gave, for the master to go back to when the story's weather ends.
+ */
 function setWeather(state: Weather, day: number, score: number | undefined, fog: Fog | "none" | undefined, zone: Zone): Weather
 {
     const today = state.day === day;
     const keptFog = fog === undefined ? (today ? state.fog : undefined) : fog === "none" ? undefined : fog;
     const variable = score === undefined && today && state.variable === true;
-    return { score: score ?? state.score, day, ...(variable ? { variable: true } : {}), ...(keptFog === undefined ? {} : { fog: keptFog }), zone };
+    const rolled = state.rolled ?? state.score;
+    const set = score ?? state.score;
+    return { score: set, day, ...(variable ? { variable: true } : {}), ...(keptFog === undefined ? {} : { fog: keptFog }), zone, ...(rolled === set ? {} : { rolled }) };
 }
 
 /** The weather as it begins, with its season, or again in a zone the party came into from another; off, said once, while the story counts only days. */
@@ -266,7 +271,8 @@ function nowText(game: Game, withScale: boolean): string
     const zone = zoneOf(game);
     const today = state.day === now.day ? morningNotes(state, { day: now.day, kind: "dawn" }, now) : "";
     const scale = [6, 5, 4, 3, 2, 1].map((score) => `${score} ${reading(score, season, zone).sky}`).join(", ");
-    return `Now${zoneText(zone)}: ${readingText(game, state.score, season)}${today}. Score ${state.score} of 6.${withScale ? ` weather-set takes, this ${season} here: ${scale}.` : ""}`;
+    const rolled = state.rolled === undefined ? "" : `, set by the story; the dice gave ${state.rolled}, ${reading(state.rolled, season, zone).sky}, to go back to when it ends`;
+    return `Now${zoneText(zone)}: ${readingText(game, state.score, season)}${today}. Score ${state.score} of 6${rolled}.${withScale ? ` weather-set takes, this ${season} here: ${scale}.` : ""}`;
 }
 
 /** The fog of this morning, and whether the afternoon may change it, while it is still to come. */
@@ -374,6 +380,7 @@ function readState(game: GameView): WeatherState | undefined
             ...(state.variable === true ? { variable: true } : {}),
             ...(state.fog === "heavy" || state.fog === "light" ? { fog: state.fog } : {}),
             ...(state.zone === "temperate" || state.zone === "torrid" || state.zone === "polar" ? { zone: state.zone } : {}),
+            ...(whole(state.rolled, 1, 6) ? { rolled: state.rolled as number } : {}),
         }
         : undefined;
 }

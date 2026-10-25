@@ -205,7 +205,9 @@ describe("the weather in a campaign", () => {
     it("is set by the master when the story changes it, until the next dawn", async () => {
         await campaign("5e", "14 April", 4, 4);
         await ok("advance", "--to", "day 1, 18:00");
-        expect(await ok("weather-set", "1", "--why", "the druid's storm")).toBe("Now: heavy rain and wind, 5 to 10 °C. Score 1 of 6.");
+        expect(await ok("weather-set", "1", "--why", "the druid's storm")).toBe(
+            "Now: heavy rain and wind, 5 to 10 °C. Score 1 of 6, set by the story; the dice gave 4, partly cloudy, to go back to when it ends.",
+        );
         expect(readLogFile(folder).at(-1)?.data).toEqual({ extension: "weather", text: "weather set to 1: the druid's storm" });
         expect((await rpg("weather-set", "7")).exitCode).toBe(1);
         expect(await ok("advance", "--by", "13h")).toBe("day 1, 18:00 → day 2, 07:00 (15 April, spring).\nWeather this morning: heavy rain and wind, 5 to 10 °C, as before.");
@@ -215,10 +217,13 @@ describe("the weather in a campaign", () => {
         await campaign("5e", "10 January", 4, 1, 1);
         await ok("advance", "--to", "day 1, 18:00");
         expect(await ok("advance", "--by", "13h")).toBe("day 1, 18:00 → day 2, 07:00 (11 January, winter).\nWeather this morning: fine, cold rain, -2 to 4 °C, worse; heavy fog this morning.");
-        expect(await ok("weather-set", "2")).toBe("Now: light or heavy snow, -5 to 0 °C; heavy fog this morning. Score 2 of 6.");
-        expect(await ok("weather-set", "--fog", "none")).toBe("Now: light or heavy snow, -5 to 0 °C. Score 2 of 6.");
-        expect(await ok("weather-set", "--fog", "light", "--why", "the valley's page")).toBe("Now: light or heavy snow, -5 to 0 °C; light fog this morning. Score 2 of 6.");
-        expect(readLogFile(folder).filter((entry) => entry.type === "extension").map((entry) => entry.data.text).slice(-3))
+        const back = "set by the story; the dice gave 3, fine, cold rain, to go back to when it ends.";
+        expect(await ok("weather-set", "2")).toBe(`Now: light or heavy snow, -5 to 0 °C; heavy fog this morning. Score 2 of 6, ${back}`);
+        expect(await ok("weather-set", "--fog", "none")).toBe(`Now: light or heavy snow, -5 to 0 °C. Score 2 of 6, ${back}`);
+        expect(await ok("weather-set", "--fog", "light", "--why", "the valley's page")).toBe(`Now: light or heavy snow, -5 to 0 °C; light fog this morning. Score 2 of 6, ${back}`);
+        // Back to what the dice gave, the story's weather over: nothing more to go back to.
+        expect(await ok("weather-set", "3")).toBe("Now: fine, cold rain, -2 to 4 °C; light fog this morning. Score 3 of 6.");
+        expect(readLogFile(folder).filter((entry) => entry.type === "extension").map((entry) => entry.data.text).slice(-4, -1))
             .toEqual(["weather set to 2", "weather set to fog none", "weather set to fog light: the valley's page"]);
         expect((await rpg("weather-set")).exitCode).toBe(1);
         await ok("advance", "--by", "6h");

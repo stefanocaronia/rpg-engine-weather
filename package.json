@@ -1,6 +1,6 @@
 {
   "name": "@rpgengine/weather",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Weather by the climate score for RPG Engine: each dawn the sky changes by a roll, with seasons, deserts, polar cold and fog.",
   "type": "module",
   "main": "dist/index.js",
