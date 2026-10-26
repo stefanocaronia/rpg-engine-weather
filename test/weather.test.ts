@@ -182,7 +182,7 @@ describe("the weather in a campaign", () => {
         const range = { from: 0, to: 5, unit: "°C" };
         // The sky its page code draws, the same in the chip and in the card (D-510).
         const sky = { sky: "cloudy and cold", icon: "cloudy", score: 4, season: "winter", zone: "temperate", low: 0, high: 5, unit: "°C", fog: "light", changes: true };
-        expect(now.shows).toEqual({ data: sky, icon: expect.any(String), chip: { text: "{range}", values: { range } }, says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } } });
+        expect(now.shows).toEqual({ data: sky, icon: expect.any(String), chip: { text: "{range}", values: { range } }, says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } }, parts: [{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range, figure: "sky" }] });
         expect(today.shows?.parts).toEqual([{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range, figure: "today" }, { facts: ["Light fog this morning", "It may change in the afternoon"] }]);
         expect(today.shows?.data).toEqual(sky);
         expect(now).toMatchObject({ module: "/pkg/%40rpgengine%2Fweather/0.3.0/page.js", figures: { sky: { width: 24, height: 24, mirror: true }, today: { width: 360, height: 72, mirror: true } } });

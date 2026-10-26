@@ -80,7 +80,14 @@ const weather: ExtensionEntry = ({ z }) => ({
             const today = todayOf(game);
             return today === undefined
                 ? undefined
-                : { data: today.data, icon: skyIcon(today.sky), chip: { text: "{range}", values: { range: today.range } }, says: { text: "{sky}, {range}", values: { sky: today.sky, range: today.range } } };
+                : {
+                    data: today.data,
+                    icon: skyIcon(today.sky),
+                    chip: { text: "{range}", values: { range: today.range } },
+                    says: { text: "{sky}, {range}", values: { sky: today.sky, range: today.range } },
+                    // Its lead's figure, the sky its page code draws, takes the icon's place in the chip (D-510).
+                    parts: [{ lead: `${today.sky.charAt(0).toUpperCase()}${today.sky.slice(1)}`, icon: skyIcon(today.sky), value: today.range, figure: "sky" }],
+                };
         },
         // Today's sky, the fog of the morning, whether the afternoon may change it, and the zone where it is not temperate.
         today: (game) => {
