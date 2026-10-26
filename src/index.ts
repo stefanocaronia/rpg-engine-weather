@@ -1,6 +1,6 @@
 // The weather extension's code: each dawn the weather changes by the climate score, at 14:00 again on a variable day, and afresh in another zone, as time passes;
 // weather says it, weather-set changes it when the story does; on the dashboard, the sky in the top and today's weather in the Scene. The rules are in climate.ts.
-import type { ExtensionEntry, Game, GameMoment, GameView, Widget, WidgetText, WidgetValue } from "rpg-engine";
+import type { Game, GameMoment, GameView, PackageEntry, Widget, WidgetText, WidgetValue } from "rpg-engine";
 import { afternoonChange, coldColumn, type Fog, morningChange, reading, type Season, seasons, type Zone } from "./climate.ts";
 
 /**
@@ -24,7 +24,7 @@ const dayMinutes = 24 * 60;
 // How many skies of many mornings the output names: the last ones.
 const shownSkies = 7;
 
-const weather: ExtensionEntry = ({ z }) => ({
+const weather: PackageEntry = ({ z }) => ({
     commands: [
         {
             name: "weather",
