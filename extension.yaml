@@ -14,6 +14,10 @@ icons:
   wind: "M3 8.5h10.5a2.5 2.5 0 1 0-2.5-2.5 M3 12.5h15a2.5 2.5 0 1 1-2.5 2.5 M3 16.5h7a2 2 0 1 1-2 2"
   heat: "M12 3a2 2 0 0 1 2 2v8.5a4 4 0 1 1-4 0V5a2 2 0 0 1 2-2Z M12 8v8 M18 5.5h2.5 M18 9h2.5"
   cold: "M12 2.5v19 M3.8 7.25l16.4 9.5 M3.8 16.75l16.4-9.5 M9.5 3.8l2.5 1.7 2.5-1.7 M9.5 20.2l2.5-1.7 2.5 1.7"
+# What its page code draws (D-510): the sky of the chip, and the band of the sky in the Scene's card; without words, they turn right to left.
+figures:
+  sky: {width: 24, height: 24, mirror: true}
+  today: {width: 360, height: 72, mirror: true}
 # On the dashboard: the sky and the temperature in the top, as the date is; today's weather a card in the Scene.
 widgets:
   now:

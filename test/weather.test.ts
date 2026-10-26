@@ -180,8 +180,12 @@ describe("the weather in a campaign", () => {
         await ok("advance", "--by", "2h");
         const [now, today] = await testing.widgets();
         const range = { from: 0, to: 5, unit: "°C" };
-        expect(now.shows).toEqual({ icon: expect.any(String), chip: { text: "{range}", values: { range } }, says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } } });
-        expect(today.shows?.parts).toEqual([{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range }, { facts: ["Light fog this morning", "It may change in the afternoon"] }]);
+        // The sky its page code draws, the same in the chip and in the card (D-510).
+        const sky = { sky: "cloudy and cold", icon: "cloudy", score: 4, season: "winter", zone: "temperate", low: 0, high: 5, unit: "°C", fog: "light", changes: true };
+        expect(now.shows).toEqual({ data: sky, icon: expect.any(String), chip: { text: "{range}", values: { range } }, says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } } });
+        expect(today.shows?.parts).toEqual([{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range, figure: "today" }, { facts: ["Light fog this morning", "It may change in the afternoon"] }]);
+        expect(today.shows?.data).toEqual(sky);
+        expect(now).toMatchObject({ module: "/pkg/%40rpgengine%2Fweather/0.3.0/page.js", figures: { sky: { width: 24, height: 24, mirror: true }, today: { width: 360, height: 72, mirror: true } } });
 
         await ok("config", "language", "it");
         await ok("config", "units", "imperial");
@@ -190,10 +194,12 @@ describe("the weather in a campaign", () => {
         expect(italian.shows?.says).toEqual({ text: "{sky}, {range}", values: { sky: "nuvoloso e freddo", range: { from: 32, to: 41, unit: "°F" } } });
         expect(card.shows?.parts?.[0]).toMatchObject({ lead: "Nuvoloso e freddo" });
         expect(card.shows?.parts?.[1]).toEqual({ facts: ["Nebbia leggera stamattina", "Può cambiare nel pomeriggio"] });
+        expect(card.shows?.data).toMatchObject({ low: 32, high: 41, unit: "°F" });
 
         // Past noon the fog is gone, and past the afternoon's roll it changes no more today.
         await ok("advance", "--by", "8h");
         expect((await testing.widgets())[1].shows?.parts).toHaveLength(1);
+        expect((await testing.widgets())[1].shows?.data).toMatchObject({ fog: null, changes: false });
     });
 
     it("is set by the master when the story changes it, until the next dawn", async () => {

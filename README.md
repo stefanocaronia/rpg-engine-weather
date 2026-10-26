@@ -6,7 +6,11 @@ This package works only inside [RPG Engine](https://github.com/stefanocaronia/rp
 
 ## Install
 
-From a campaign, with RPG Engine 0.5.0 or later: `rpg package install weather`, or ask the master to install it. The story needs to start on a day of the world (`config calendar-start "14 April"`), for the season. It works with any game system.
+From a campaign, with RPG Engine 0.6.0 or later: `rpg package install weather`, or ask the master to install it. The story needs to start on a day of the world (`config calendar-start "14 April"`), for the season. It works with any game system.
+
+## On the dashboard
+
+Its code in the dashboard's page, `src/page.tsx` built to `dist/page.js`, draws the sky of the chip in the top and the band of the sky in the Scene's card, from the data its widgets give: the sky and its icon, its score, the season and the zone, the day's lowest and highest, the morning's fog, and whether the afternoon may change it. It needs RPG Engine 0.6.0 or later, the extension API 4.
 
 ## Develop and test
 

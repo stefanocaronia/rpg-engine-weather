@@ -78,7 +78,9 @@ const weather: ExtensionEntry = ({ z }) => ({
         // The sky and the temperature, the whole sentence in its tip (D-502 (6)).
         now: (game) => {
             const today = todayOf(game);
-            return today === undefined ? undefined : { icon: skyIcon(today.sky), chip: { text: "{range}", values: { range: today.range } }, says: { text: "{sky}, {range}", values: { sky: today.sky, range: today.range } } };
+            return today === undefined
+                ? undefined
+                : { data: today.data, icon: skyIcon(today.sky), chip: { text: "{range}", values: { range: today.range } }, says: { text: "{sky}, {range}", values: { sky: today.sky, range: today.range } } };
         },
         // Today's sky, the fog of the morning, whether the afternoon may change it, and the zone where it is not temperate.
         today: (game) => {
@@ -90,8 +92,9 @@ const weather: ExtensionEntry = ({ z }) => ({
 
             const facts: WidgetText[] = [...today.notes, ...(today.zone === "torrid" ? ["Hot desert"] : today.zone === "polar" ? ["Polar cold"] : [])];
             return {
+                data: today.data,
                 icon: skyIcon(today.sky),
-                parts: [{ lead: `${today.sky.charAt(0).toUpperCase()}${today.sky.slice(1)}`, icon: skyIcon(today.sky), value: today.range }, ...(facts.length === 0 ? [] : [{ facts }])],
+                parts: [{ lead: `${today.sky.charAt(0).toUpperCase()}${today.sky.slice(1)}`, icon: skyIcon(today.sky), value: today.range, figure: "today" }, ...(facts.length === 0 ? [] : [{ facts }])],
             } satisfies Widget;
         },
     },
@@ -203,7 +206,7 @@ function change(game: Game, kept: Weather, turns: Turn[], to: GameMoment): strin
 }
 
 /** The weather now, as the dashboard shows it: the sky, the temperature in the campaign's units, the morning's notes, the zone; undefined while there is none. */
-function todayOf(game: GameView): { sky: string; range: WidgetValue; notes: string[]; zone: Zone; } | undefined
+function todayOf(game: GameView): { sky: string; range: WidgetValue; notes: string[]; zone: Zone; data: Sky; } | undefined
 {
     const state = readState(game);
     const now = game.now();
@@ -222,7 +225,30 @@ function todayOf(game: GameView): { sky: string; range: WidgetValue; notes: stri
         ...(today && state.fog !== undefined && minute < 12 * 60 ? [state.fog === "heavy" ? "Heavy fog this morning" : "Light fog this morning"] : []),
         ...(today && state.variable === true && minute < afternoon ? ["It may change in the afternoon"] : []),
     ];
-    return { sky, range: { from: degrees(low), to: degrees(high), unit }, notes, zone };
+    const fog = today && state.fog !== undefined && minute < 12 * 60 ? state.fog : null;
+    const changes = today && state.variable === true && minute < afternoon;
+    // What the page code draws of the sky (D-510): never more than the player's character sees.
+    const data: Sky = { sky, icon: skyIcon(sky), score: state.score, season, zone, low: degrees(low), high: degrees(high), unit, fog, changes };
+    return { sky, range: { from: degrees(low), to: degrees(high), unit }, notes, zone, data };
+}
+
+/**
+ * The sky as the page code draws it (D-510), the chip's icon and the band of the Scene's card: its words in English and the icon of extension.yaml that
+ * draws it, its score from 1, an extreme, to 6, the mildest; the season and the zone; the day's lowest and highest, in the campaign's units; the morning's
+ * fog until noon, and whether the afternoon may change it, until 14:00.
+ */
+export interface Sky
+{
+    sky: string;
+    icon: string;
+    score: number;
+    season: Season;
+    zone: Zone;
+    low: number;
+    high: number;
+    unit: "°C" | "°F";
+    fog: Fog | null;
+    changes: boolean;
 }
 
 /** Degrees in the campaign's units, from the tables' °C, and their unit. */
