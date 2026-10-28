@@ -2,10 +2,14 @@
 import fc from "fast-check";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { type TestCampaign, testCampaign } from "rpg-engine/testing";
 import { afterEach, describe, expect, it } from "vitest";
 import { afternoonChange, coldColumn, morningChange, reading } from "../src/climate.ts";
+
+// The version the page code is served by, as package.json gives it.
+const version = (JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as { version: string; }).version;
 
 /** Dice that show these faces in turn. */
 function faces(...values: number[]): () => number
@@ -185,7 +189,7 @@ describe("the weather in a campaign", () => {
         expect(now.shows).toEqual({ data: sky, icon: expect.any(String), chip: { text: "{range}", values: { range } }, says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } }, parts: [{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range, figure: "sky" }] });
         expect(today.shows?.parts).toEqual([{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range, figure: "today" }, { facts: ["Light fog this morning", "It may change in the afternoon"] }]);
         expect(today.shows?.data).toEqual(sky);
-        expect(now).toMatchObject({ module: "/pkg/%40rpgengine%2Fweather/0.3.0/page.js", figures: { sky: { width: 24, height: 24, mirror: true }, today: { width: 360, height: 72, mirror: true } } });
+        expect(now).toMatchObject({ module: `/pkg/%40rpgengine%2Fweather/${version}/page.js`, figures: { sky: { width: 24, height: 24, mirror: true }, today: { width: 360, height: 72, mirror: true } } });
 
         await ok("config", "language", "it");
         await ok("config", "units", "imperial");
