@@ -42,10 +42,11 @@
     "test": "npm run build && vitest run"
   },
   "devDependencies": {
+    "@rpgengine/system-5e": "^1.0.0",
     "@types/node": "^22.20.4",
     "fast-check": "^4.10.2",
     "preact": "^10.29.8",
-    "rpg-engine": "^0.6.0",
+    "rpg-engine": "^0.7.0",
     "typescript": "^6.0.3",
     "vitest": "^5.0.3"
   }
