@@ -9,10 +9,14 @@ export const seasons = ["winter", "spring", "summer", "autumn"] as const;
 
 export type Season = (typeof seasons)[number];
 
-/** What a score reads as: the sky, and the temperature by day, in °C. */
+/** The icons of extension.yaml that draw a sky. */
+export type SkyIcon = "clear" | "partly" | "cloudy" | "rain" | "storm" | "snow" | "wind" | "heat" | "cold";
+
+/** What a score reads as: the sky, its icon, and the temperature by day, in °C. */
 export interface Reading
 {
     sky: string;
+    icon: SkyIcon;
     low: number;
     high: number;
 }
@@ -28,63 +32,63 @@ export interface Change
     fog?: Fog;
 }
 
-// From 6, the mildest, to 1, an extreme.
-const readings: Record<Season | Exclude<Zone, "temperate">, [string, number, number][]> = {
+// From 6, the mildest, to 1, an extreme: the sky, the lowest and highest °C, its icon.
+const readings: Record<Season | Exclude<Zone, "temperate">, [string, number, number, SkyIcon][]> = {
     winter: [
-        ["clear and cool", 10, 15],
-        ["sunny and cold", 5, 10],
-        ["cloudy and cold", 0, 5],
-        ["fine, cold rain", -2, 4],
-        ["light or heavy snow", -5, 0],
-        ["a snowstorm", -15, -5],
+        ["clear and cool", 10, 15, "clear"],
+        ["sunny and cold", 5, 10, "clear"],
+        ["cloudy and cold", 0, 5, "cloudy"],
+        ["fine, cold rain", -2, 4, "rain"],
+        ["light or heavy snow", -5, 0, "snow"],
+        ["a snowstorm", -15, -5, "snow"],
     ],
     spring: [
-        ["clear and warm", 20, 25],
-        ["sunny and mild", 15, 20],
-        ["partly cloudy", 15, 20],
-        ["cloudy with showers", 10, 15],
-        ["rain", 10, 15],
-        ["heavy rain and wind", 5, 10],
+        ["clear and warm", 20, 25, "clear"],
+        ["sunny and mild", 15, 20, "clear"],
+        ["partly cloudy", 15, 20, "partly"],
+        ["cloudy with showers", 10, 15, "rain"],
+        ["rain", 10, 15, "rain"],
+        ["heavy rain and wind", 5, 10, "rain"],
     ],
     summer: [
-        ["clear with a breeze", 25, 30],
-        ["clear and hot", 30, 35],
-        ["sunny and hot", 25, 30],
-        ["partly cloudy", 25, 30],
-        ["a summer thunderstorm, or hail", 20, 25],
-        ["a heat wave", 35, 42],
+        ["clear with a breeze", 25, 30, "clear"],
+        ["clear and hot", 30, 35, "clear"],
+        ["sunny and hot", 25, 30, "clear"],
+        ["partly cloudy", 25, 30, "partly"],
+        ["a summer thunderstorm, or hail", 20, 25, "storm"],
+        ["a heat wave", 35, 42, "heat"],
     ],
     autumn: [
-        ["clear and mild", 20, 25],
-        ["sunny and cool", 15, 20],
-        ["partly cloudy", 10, 15],
-        ["scattered rain", 10, 15],
-        ["rain", 10, 15],
-        ["strong wind", 5, 10],
+        ["clear and mild", 20, 25, "clear"],
+        ["sunny and cool", 15, 20, "clear"],
+        ["partly cloudy", 10, 15, "partly"],
+        ["scattered rain", 10, 15, "rain"],
+        ["rain", 10, 15, "rain"],
+        ["strong wind", 5, 10, "wind"],
     ],
     torrid: [
-        ["partly cloudy and bearable", 20, 25],
-        ["clear and hot", 25, 30],
-        ["blazing sun", 30, 35],
-        ["sultry heat", 35, 40],
-        ["oppressive heat", 40, 45],
-        ["a sandstorm, or scorching heat", 45, 50],
+        ["partly cloudy and bearable", 20, 25, "partly"],
+        ["clear and hot", 25, 30, "clear"],
+        ["blazing sun", 30, 35, "heat"],
+        ["sultry heat", 35, 40, "heat"],
+        ["oppressive heat", 40, 45, "heat"],
+        ["a sandstorm, or scorching heat", 45, 50, "wind"],
     ],
     polar: [
-        ["clear and freezing", -10, -5],
-        ["extreme cold", -15, -10],
-        ["cloudy and frigid", -20, -15],
-        ["light snow", -25, -20],
-        ["heavy snow", -30, -25],
-        ["a snowstorm", -35, -30],
+        ["clear and freezing", -10, -5, "clear"],
+        ["extreme cold", -15, -10, "cold"],
+        ["cloudy and frigid", -20, -15, "cold"],
+        ["light snow", -25, -20, "snow"],
+        ["heavy snow", -30, -25, "snow"],
+        ["a snowstorm", -35, -30, "snow"],
     ],
 };
 
 /** What a score reads as in a season, or in a zone that takes the season's place. */
 export function reading(score: number, season: Season, zone: Zone): Reading
 {
-    const [sky, low, high] = readings[zone === "temperate" ? season : zone][6 - score];
-    return { sky, low, high };
+    const [sky, low, high, icon] = readings[zone === "temperate" ? season : zone][6 - score];
+    return { sky, icon, low, high };
 }
 
 /** Whether the cold column of the morning roll holds, with its fog: winter and autumn, and the polar zones; spring, summer and the hot deserts take the warm one. */

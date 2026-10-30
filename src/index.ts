@@ -1,7 +1,26 @@
 // The weather extension's code: each dawn the weather changes by the climate score, at 14:00 again on a variable day, and afresh in another zone, as time passes;
 // weather says it, weather-set changes it when the story does; on the dashboard, the sky in the top and today's weather in the Scene. The rules are in climate.ts.
 import type { Game, GameMoment, GameView, PackageEntry, Widget, WidgetText, WidgetValue } from "rpg-engine";
-import { afternoonChange, coldColumn, type Fog, morningChange, reading, type Season, seasons, type Zone } from "./climate.ts";
+import { afternoonChange, coldColumn, type Fog, morningChange, reading, type Season, seasons, type SkyIcon, type Zone } from "./climate.ts";
+
+/**
+ * The sky as the page code draws it (D-510), the chip's icon and the band of the Scene's card: its words in English and the icon of extension.yaml that
+ * draws it, its score from 1, an extreme, to 6, the mildest; the season and the zone; the day's lowest and highest, in the campaign's units; the morning's
+ * fog until noon, and whether the afternoon may change it, until 14:00.
+ */
+export interface Sky
+{
+    sky: string;
+    icon: SkyIcon;
+    score: number;
+    season: Season;
+    zone: Zone;
+    low: number;
+    high: number;
+    unit: "°C" | "°F";
+    fog: Fog | null;
+    changes: boolean;
+}
 
 /**
  * What the weather keeps in the campaign: the score, the day it was rolled for, whether its afternoon rolls again, its morning's fog and the zone it was
@@ -19,6 +38,8 @@ interface Turn
 }
 
 const dawn = 6 * 60;
+// The morning's fog lasts until noon; a variable day may change until 14:00.
+const noon = 12 * 60;
 const afternoon = 14 * 60;
 const dayMinutes = 24 * 60;
 // How many skies of many mornings the output names: the last ones.
@@ -52,7 +73,7 @@ const weather: PackageEntry = ({ z }) => ({
                 const state = readState(game);
 
                 if (now === undefined || state === undefined) {
-                    return "No weather yet: it begins when the game has its date, with advance to.";
+                    return noWeatherText(now);
                 }
 
                 if ("off" in state) {
@@ -63,7 +84,7 @@ const weather: PackageEntry = ({ z }) => ({
                     throw new Error("Give the score, the fog, or both: as weather-set 2, or weather-set --fog heavy. Nothing changed.");
                 }
 
-                if (input.fog !== undefined && input.fog !== "none" && (now.minute ?? 0) >= 12 * 60) {
+                if (input.fog !== undefined && input.fog !== "none" && (now.minute ?? 0) >= noon) {
                     throw new Error("The fog is the morning's, until noon, and it is past noon: tell an evening mist in the story. Nothing changed.");
                 }
 
@@ -82,11 +103,11 @@ const weather: PackageEntry = ({ z }) => ({
                 ? undefined
                 : {
                     data: today.data,
-                    icon: skyIcon(today.sky),
+                    icon: today.data.icon,
                     chip: { text: "{range}", values: { range: today.range } },
                     says: { text: "{sky}, {range}", values: { sky: today.sky, range: today.range } },
                     // Its lead's figure, the sky its page code draws, takes the icon's place in the chip (D-510).
-                    parts: [{ lead: `${today.sky.charAt(0).toUpperCase()}${today.sky.slice(1)}`, icon: skyIcon(today.sky), value: today.range, figure: "sky" }],
+                    parts: [leadOf(today, "sky")],
                 };
         },
         // Today's sky, the fog of the morning, whether the afternoon may change it, and the zone where it is not temperate.
@@ -98,11 +119,7 @@ const weather: PackageEntry = ({ z }) => ({
             }
 
             const facts: WidgetText[] = [...today.notes, ...(today.zone === "torrid" ? ["Hot desert"] : today.zone === "polar" ? ["Polar cold"] : [])];
-            return {
-                data: today.data,
-                icon: skyIcon(today.sky),
-                parts: [{ lead: `${today.sky.charAt(0).toUpperCase()}${today.sky.slice(1)}`, icon: skyIcon(today.sky), value: today.range, figure: "today" }, ...(facts.length === 0 ? [] : [{ facts }])],
-            } satisfies Widget;
+            return { data: today.data, icon: today.data.icon, parts: [leadOf(today, "today"), ...(facts.length === 0 ? [] : [{ facts }])] } satisfies Widget;
         },
     },
     timePassed: ({ from, to }, game) => {
@@ -224,38 +241,30 @@ function todayOf(game: GameView): { sky: string; range: WidgetValue; notes: stri
     }
 
     const zone = zoneOf(game);
-    const { sky, low, high } = reading(state.score, season, zone);
+    const { sky, icon, low, high } = reading(state.score, season, zone);
     const { degrees, unit } = temperatureIn(game);
-    const minute = now.minute ?? 0;
-    const today = state.day === now.day;
+    const morning = morningAt(state, now);
     const notes = [
-        ...(today && state.fog !== undefined && minute < 12 * 60 ? [state.fog === "heavy" ? "Heavy fog this morning" : "Light fog this morning"] : []),
-        ...(today && state.variable === true && minute < afternoon ? ["It may change in the afternoon"] : []),
+        ...(morning.fog === undefined ? [] : [morning.fog === "heavy" ? "Heavy fog this morning" : "Light fog this morning"]),
+        ...(morning.changes ? ["It may change in the afternoon"] : []),
     ];
-    const fog = today && state.fog !== undefined && minute < 12 * 60 ? state.fog : null;
-    const changes = today && state.variable === true && minute < afternoon;
     // What the page code draws of the sky (D-510): never more than the player's character sees.
-    const data: Sky = { sky, icon: skyIcon(sky), score: state.score, season, zone, low: degrees(low), high: degrees(high), unit, fog, changes };
+    const data: Sky = { sky, icon, score: state.score, season, zone, low: degrees(low), high: degrees(high), unit, fog: morning.fog ?? null, changes: morning.changes };
     return { sky, range: { from: degrees(low), to: degrees(high), unit }, notes, zone, data };
 }
 
-/**
- * The sky as the page code draws it (D-510), the chip's icon and the band of the Scene's card: its words in English and the icon of extension.yaml that
- * draws it, its score from 1, an extreme, to 6, the mildest; the season and the zone; the day's lowest and highest, in the campaign's units; the morning's
- * fog until noon, and whether the afternoon may change it, until 14:00.
- */
-export interface Sky
+/** The lead of a widget: the sky in words, its icon and the day's range, drawn by the figure named. */
+function leadOf(today: { sky: string; range: WidgetValue; data: Sky; }, figure: string): { lead: string; icon: string; value: WidgetValue; figure: string; }
 {
-    sky: string;
-    icon: string;
-    score: number;
-    season: Season;
-    zone: Zone;
-    low: number;
-    high: number;
-    unit: "°C" | "°F";
-    fog: Fog | null;
-    changes: boolean;
+    return { lead: `${today.sky.charAt(0).toUpperCase()}${today.sky.slice(1)}`, icon: today.data.icon, value: today.range, figure };
+}
+
+/** What is left of a day's morning at a moment: its fog until noon, and whether the afternoon may change it, until 14:00; nothing on another day. */
+function morningAt(state: { day: number; variable?: boolean; fog?: Fog; }, at: { day: number; minute?: number; }): { fog: Fog | undefined; changes: boolean; }
+{
+    const minute = at.minute ?? 0;
+    const today = state.day === at.day;
+    return { fog: today && minute < noon ? state.fog : undefined, changes: today && state.variable === true && minute < afternoon };
 }
 
 /** Degrees in the campaign's units, from the tables' °C, and their unit. */
@@ -265,22 +274,6 @@ function temperatureIn(game: GameView): { degrees: (celsius: number) => number; 
     return { degrees: (celsius) => (imperial ? Math.round(celsius * 9 / 5 + 32) : celsius), unit: imperial ? "°F" : "°C" };
 }
 
-/** The icon of extension.yaml that draws a sky. */
-function skyIcon(sky: string): string
-{
-    const kinds: [RegExp, string][] = [
-        [/snow/, "snow"],
-        [/thunder|hail/, "storm"],
-        [/rain|shower/, "rain"],
-        [/wind|sandstorm/, "wind"],
-        [/heat|sultry|blazing/, "heat"],
-        [/extreme cold|frigid/, "cold"],
-        [/partly/, "partly"],
-        [/cloudy/, "cloudy"],
-    ];
-    return kinds.find(([pattern]) => pattern.test(sky))?.[1] ?? "clear";
-}
-
 /** What the weather command says: now, and, for the master, the scale weather-set takes. */
 function nowText(game: Game, withScale: boolean): string
 {
@@ -288,7 +281,7 @@ function nowText(game: Game, withScale: boolean): string
     const now = game.now();
 
     if (now === undefined || state === undefined) {
-        return "No weather yet: it begins when the game has its date, with advance to.";
+        return noWeatherText(now);
     }
 
     const season = seasonOf(game, now.day);
@@ -311,10 +304,18 @@ function nowText(game: Game, withScale: boolean): string
 /** The fog of this morning, and whether the afternoon may change it, while it is still to come. */
 function morningNotes(state: { day: number; variable?: boolean; fog?: Fog; }, last: Turn, to: GameMoment): string
 {
-    const minute = to.minute ?? 0;
-    const fog = state.fog !== undefined && to.day === state.day && minute < 12 * 60 ? `; ${state.fog} fog this morning` : "";
-    const later = state.variable === true && to.day === state.day && minute < afternoon && last.kind === "dawn" ? "; it may change in the afternoon" : "";
+    const morning = morningAt(state, to);
+    const fog = morning.fog === undefined ? "" : `; ${morning.fog} fog this morning`;
+    const later = morning.changes && last.kind === "dawn" ? "; it may change in the afternoon" : "";
     return `${fog}${later}`;
+}
+
+/** Why there is no weather yet: the game has no date, or it has one and no time passed since the weather came to it, as an extension added to a game going on. */
+function noWeatherText(now: GameMoment | undefined): string
+{
+    return now === undefined
+        ? "No weather yet: it begins when the game has its date, with advance to."
+        : "No weather yet: it begins the next time the game's time passes, as with advance --by 1m.";
 }
 
 /** The sky and the temperature, in the campaign's units. */

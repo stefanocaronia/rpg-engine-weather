@@ -2,18 +2,19 @@
 // with the page's tokens in style objects (the page's security keeps out <style>), without words: the sky, the temperature and the notes stay the page's,
 // in the lead's words and the card's facts. Nothing loops: a sky is not waiting for the player.
 import type { JSX } from "preact";
-import { useState } from "preact/hooks";
+import { useId } from "preact/hooks";
 import type { FigureProps, PageModule } from "rpg-engine/page";
 import type { Sky } from "./index.ts";
 
-/** The chip's sky: the icon of its kind, as the page strokes its own, and the morning's fog under it. */
-function SkyFigure({ data }: FigureProps)
+/** The chip's sky: the icon of its kind, as extension.yaml draws it and the dashboard gives it in the lead, stroked as the page's own, and the morning's fog under it. */
+function SkyFigure({ data, part }: FigureProps)
 {
     const sky = data as Sky;
     const fogged = sky.fog !== null;
+    const icon = part !== undefined && "lead" in part ? part.icon : undefined;
     return (
         <svg viewBox="0 0 24 24" aria-hidden="true" style={{ display: "block", width: "100%", height: "100%", overflow: "visible" }}>
-            <path d={icons[sky.icon] ?? icons.clear} style={{ ...stroke, ...(fogged ? { opacity: 0.55 } : {}) }} />
+            {icon !== undefined && <path d={icon} style={{ ...stroke, ...(fogged ? { opacity: 0.55 } : {}) }} />}
             {fogged && <path d={sky.fog === "heavy" ? "M3 16.5h18 M5 19.5h14 M3 22.5h18" : "M4 19.5h16 M6 22.5h12"} style={{ ...stroke, stroke: "var(--muted)" }} />}
         </svg>
     );
@@ -78,19 +79,6 @@ function TodayFigure({ data }: FigureProps)
 const page: PageModule = { figures: { sky: SkyFigure, today: TodayFigure } };
 
 export default page;
-
-/** The icons of extension.yaml, the same skies the chip drew without page code. */
-const icons: Record<string, string> = {
-    clear: "M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8Z M12 2.5v2 M12 19.5v2 M5.3 5.3l1.4 1.4 M17.3 17.3l1.4 1.4 M2.5 12h2 M19.5 12h2 M5.3 18.7l1.4-1.4 M17.3 6.7l1.4-1.4",
-    partly: "M8.5 2.5v1.5 M3.5 7.5H2 M4.6 3.6l1 1 M12.4 3.6l-1 1 M5.6 10.6a3.5 3.5 0 0 1 6.2-3.5 M8 20h9a3.5 3.5 0 0 0 .4-6.98A5 5 0 0 0 8.3 12.4a3.8 3.8 0 0 0-.3 7.6Z",
-    cloudy: "M7 18.5h10a3.8 3.8 0 0 0 .5-7.57A5.8 5.8 0 0 0 6.4 9.8a4.4 4.4 0 0 0 .6 8.7Z",
-    rain: "M7 14.5h10a3.5 3.5 0 0 0 .4-6.98A5.5 5.5 0 0 0 6.6 6.5a4 4 0 0 0 .4 8Z M8.5 17.5l-1 3 M12.5 17.5l-1 3 M16.5 17.5l-1 3",
-    storm: "M7 14.5h10a3.5 3.5 0 0 0 .4-6.98A5.5 5.5 0 0 0 6.6 6.5a4 4 0 0 0 .4 8Z M12.5 16l-2 3h3l-2 3",
-    snow: "M7 14.5h10a3.5 3.5 0 0 0 .4-6.98A5.5 5.5 0 0 0 6.6 6.5a4 4 0 0 0 .4 8Z M8 18h.01 M12 18h.01 M16 18h.01 M10 21h.01 M14 21h.01",
-    wind: "M3 8.5h10.5a2.5 2.5 0 1 0-2.5-2.5 M3 12.5h15a2.5 2.5 0 1 1-2.5 2.5 M3 16.5h7a2 2 0 1 1-2 2",
-    heat: "M12 3a2 2 0 0 1 2 2v8.5a4 4 0 1 1-4 0V5a2 2 0 0 1 2-2Z M12 8v8 M18 5.5h2.5 M18 9h2.5",
-    cold: "M12 2.5v19 M3.8 7.25l16.4 9.5 M3.8 16.75l16.4-9.5 M9.5 3.8l2.5 1.7 2.5-1.7 M9.5 20.2l2.5-1.7 2.5 1.7",
-};
 
 const stroke: JSX.CSSProperties = { fill: "none", stroke: "var(--accent)", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" };
 
@@ -216,14 +204,4 @@ function Range({ sky }: { sky: Sky; })
 function freezing(sky: Sky): number
 {
     return sky.unit === "°F" ? 32 : 0;
-}
-
-// Ids of each band's gradients and clip, one set per band drawn.
-let drawn = 0;
-
-/** An id of its own for each band, kept as it is drawn again. */
-function useId(): string
-{
-    const [id] = useState(() => `today-${++drawn}`);
-    return id;
 }

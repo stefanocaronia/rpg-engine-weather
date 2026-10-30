@@ -1,8 +1,7 @@
 // The weather extension (D-257, D-427, D-436): the rules of the climate score, and the extension in a campaign, through the engine's commands, with dice given.
 import fc from "fast-check";
-import { writeFileSync } from "node:fs";
+import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { type TestCampaign, testCampaign } from "rpg-engine/testing";
 import { afterEach, describe, expect, it } from "vitest";
@@ -69,12 +68,12 @@ describe("the climate score", () => {
     });
 
     it("reads a score on the season's table, or on the zone's in its place; deserts take the warm column, the polar cold the cold one", () => {
-        expect(reading(4, "spring", "temperate")).toEqual({ sky: "partly cloudy", low: 15, high: 20 });
-        expect(reading(1, "winter", "temperate")).toEqual({ sky: "a snowstorm", low: -15, high: -5 });
-        expect(reading(6, "summer", "temperate")).toEqual({ sky: "clear with a breeze", low: 25, high: 30 });
-        expect(reading(5, "autumn", "temperate")).toEqual({ sky: "sunny and cool", low: 15, high: 20 });
-        expect(reading(4, "winter", "torrid")).toEqual({ sky: "blazing sun", low: 30, high: 35 });
-        expect(reading(2, "summer", "polar")).toEqual({ sky: "heavy snow", low: -30, high: -25 });
+        expect(reading(4, "spring", "temperate")).toEqual({ sky: "partly cloudy", icon: "partly", low: 15, high: 20 });
+        expect(reading(1, "winter", "temperate")).toEqual({ sky: "a snowstorm", icon: "snow", low: -15, high: -5 });
+        expect(reading(6, "summer", "temperate")).toEqual({ sky: "clear with a breeze", icon: "clear", low: 25, high: 30 });
+        expect(reading(5, "autumn", "temperate")).toEqual({ sky: "sunny and cool", icon: "clear", low: 15, high: 20 });
+        expect(reading(4, "winter", "torrid")).toEqual({ sky: "blazing sun", icon: "heat", low: 30, high: 35 });
+        expect(reading(2, "summer", "polar")).toEqual({ sky: "heavy snow", icon: "snow", low: -30, high: -25 });
         expect([coldColumn("winter", "temperate"), coldColumn("autumn", "temperate"), coldColumn("spring", "temperate"), coldColumn("winter", "torrid"), coldColumn("summer", "polar")])
             .toEqual([true, true, false, false, true]);
     });
@@ -87,11 +86,7 @@ describe("the weather in a campaign", () => {
     let folder: string;
     const rpg = (...args: string[]) => testing.run(...args);
 
-    const ok = async (...args: string[]): Promise<string> => {
-        const result = await rpg(...args);
-        expect(result.exitCode, result.output).toBe(0);
-        return result.output;
-    };
+    const ok = (...args: string[]): Promise<string> => testing.ok(...args);
 
     /** A campaign of this system that uses the weather, the story starting on this day of the world, and these faces of the dice in turn. */
     async function campaign(system: string, start: string, ...rolled: number[]): Promise<void>
@@ -130,6 +125,30 @@ describe("the weather in a campaign", () => {
         await ok("write", "Dune Rosse", "--type", "place", "--add", "contains=[[Kira]]", "--add", "environment=biome: desert");
         await ok("config", "units", "imperial");
         expect(await ok("advance", "--to", "day 1, 10:00")).toBe("The game starts on day 1, 10:00 (1 July, summer).\nWeather (hot desert): blazing sun, 86 to 95 °F.");
+    });
+
+    it("reads the polar table where the places say their climate, and takes the cold column", async () => {
+        await campaign("free", "1 July", 4);
+        await ok("write", "Kira", "--type", "character", "--set", "role=pc");
+        await ok("write", "Ghiacci", "--type", "place", "--add", "contains=[[Kira]]", "--add", "environment=climate: polar");
+        expect(await ok("advance", "--to", "day 1, 10:00")).toBe("The game starts on day 1, 10:00 (1 July, summer).\nWeather (polar cold): cloudy and frigid, -20 to -15 °C.");
+    });
+
+    it("changes at dawn and in the afternoon when the time comes to 06:00 and to 14:00 exactly", async () => {
+        await campaign("5e", "14 April", 3, 2, 6);
+        await ok("advance", "--to", "day 1, 05:00");
+        expect(await ok("advance", "--by", "1h")).toBe(
+            "day 1, 05:00 → day 1, 06:00 (14 April, spring).\nWeather this morning: cloudy with showers, 10 to 15 °C, as before; it may change in the afternoon.",
+        );
+        expect(await ok("advance", "--by", "8h")).toBe("day 1, 06:00 → day 1, 14:00 (14 April, spring).\nWeather this afternoon: partly cloudy, 15 to 20 °C, better.");
+    });
+
+    it("says how it begins when it has no state in a game that has its date, as one it came to while going on", async () => {
+        await campaign("5e", "14 April", 4, 3);
+        await ok("advance", "--to", "day 1, 18:00");
+        rmSync(join(folder, "extensions", "weather", "state.yaml"));
+        expect(await ok("weather")).toBe("No weather yet: it begins the next time the game's time passes, as with advance --by 1m.");
+        expect(await ok("advance", "--by", "1m")).toBe("day 1, 18:00 → day 1, 18:01 (14 April, spring).\nWeather: cloudy with showers, 10 to 15 °C.");
     });
 
     it("rolls afresh when the party comes into another zone, or out of it, whatever the dawns on the way rolled", async () => {
@@ -186,7 +205,13 @@ describe("the weather in a campaign", () => {
         const range = { from: 0, to: 5, unit: "°C" };
         // The sky its page code draws, the same in the chip and in the card (D-510).
         const sky = { sky: "cloudy and cold", icon: "cloudy", score: 4, season: "winter", zone: "temperate", low: 0, high: 5, unit: "°C", fog: "light", changes: true };
-        expect(now.shows).toEqual({ data: sky, icon: expect.any(String), chip: { text: "{range}", values: { range } }, says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } }, parts: [{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range, figure: "sky" }] });
+        expect(now.shows).toEqual({
+            data: sky,
+            icon: expect.any(String),
+            chip: { text: "{range}", values: { range } },
+            says: { text: "{sky}, {range}", values: { sky: "cloudy and cold", range } },
+            parts: [{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range, figure: "sky" }],
+        });
         expect(today.shows?.parts).toEqual([{ lead: "Cloudy and cold", icon: now.shows?.icon, value: range, figure: "today" }, { facts: ["Light fog this morning", "It may change in the afternoon"] }]);
         expect(today.shows?.data).toEqual(sky);
         expect(now).toMatchObject({ module: `/pkg/%40rpgengine%2Fweather/${version}/page.js`, figures: { sky: { width: 24, height: 24, mirror: true }, today: { width: 360, height: 72, mirror: true } } });
