@@ -1,7 +1,7 @@
 // The weather's code in the dashboard's page (D-510): the sky of the chip in the top, and the band of the day's sky over the words of the Scene's card. Drawn
 // with the page's tokens in style objects (the page's security keeps out <style>), without words: the sky, the temperature and the notes stay the page's,
 // in the lead's words and the card's facts. Nothing loops: a sky is not waiting for the player.
-import type { JSX } from "preact";
+import type { CSSProperties } from "preact";
 import { useId } from "preact/hooks";
 import type { FigureProps, PageModule } from "rpg-engine/page";
 import type { Sky } from "./index.ts";
@@ -80,7 +80,7 @@ const page: PageModule = { figures: { sky: SkyFigure, today: TodayFigure } };
 
 export default page;
 
-const stroke: JSX.CSSProperties = { fill: "none", stroke: "var(--accent)", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" };
+const stroke: CSSProperties = { fill: "none", stroke: "var(--accent)", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" };
 
 /** The colour of the day's air and ground: the season's, the desert's sand or the ice. */
 function tintOf(sky: Sky): string
