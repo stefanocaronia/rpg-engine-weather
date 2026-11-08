@@ -9,6 +9,8 @@ words:
   It may change in the afternoon: Può cambiare nel pomeriggio
   Hot desert: Deserto caldo
   Polar cold: Gelo polare
+  # The sky and the temperatures in one line, with the language's comma.
+  "{sky}, {range}": "{sky}, {range}"
   # Winter
   clear and cool: sereno e fresco
   sunny and cold: soleggiato e freddo
