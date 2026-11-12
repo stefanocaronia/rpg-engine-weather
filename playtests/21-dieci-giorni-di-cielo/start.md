@@ -1,6 +1,6 @@
 # 21 Dieci giorni di cielo: the weather on a long road
 
-The first long game with the weather extension, `@rpgengine/weather` 0.2.2 (D-436, D-437, D-440, D-441), installed from npm as a player would install it. A 5e campaign already under way, one player character, Corrado (cleric 3), on a ten-day journey with a deadline: two days of temperate hills at the end of August, two days and more waiting at the edge of the desert, three nights across the Deserto d'Ambra with a guide and her camel, then a fort on the far side, a storm on the ridges, and a choice between a short gorge that floods and a long valley road. The season turns on day 8, the 1st of September. Giulia's scenario (24 October).
+The first long game with the weather extension, `@rpgengine/weather` 0.4.0 (D-436, D-437, D-440, D-441), installed from npm as a player would install it. A 5e campaign already under way, one player character, Corrado (cleric 3), on a ten-day journey with a deadline: two days of temperate hills at the end of August, two days and more waiting at the edge of the desert, three nights across the Deserto d'Ambra with a guide and her camel, then a fort on the far side, a storm on the ridges, and a choice between a short gorge that floods and a long valley road. The season turns on day 8, the 1st of September. Giulia's scenario (24 October).
 
 It tests:
 
@@ -23,7 +23,7 @@ Before session 1, in a new folder chosen as `README.md` says, from the repo at t
 $run = "<runs>\<date>\<n>"
 $campaign = "$run\cielo"
 rpg init $campaign --name "Dieci giorni di cielo" --system 5e --language it --difficulty normal --lethality dice
-Copy-Item -Recurse -Force ..\rpg-engine-weatherplaytests\21-dieci-giorni-di-cielo\world\* $campaign\world
+Copy-Item -Recurse -Force ..\rpg-engine-weather\playtests\21-dieci-giorni-di-cielo\world\* $campaign\world
 Push-Location $campaign
 rpg package install weather
 rpg package list
@@ -38,7 +38,7 @@ rpg validate; rpg status
 Pop-Location
 ```
 
-- `package install weather` installs `@rpgengine/weather` from npm, verified, with no yes asked, and adds it to `campaign.yaml`; `package list` must give it at 0.2.2. If npm has a newer version, write down which one was played.
+- `package install weather` installs `@rpgengine/weather` from npm, verified, with no yes asked, and adds it to `campaign.yaml`; `package list` must give it at 0.4.0. If npm has a newer version, write down which one was played.
 - `advance` to day 1 starts the weather: its output ends with a line «Weather: …», the first score rolled with 1d6 on the summer table. `rpg weather` says the same with the scale of `weather-set`. The roll is the extension's, not a roll of the log, so `--prepared` accepts the campaign.
 - The settings: rigor rules, so the rations are counted by the engine and the water is the master's to count, «a gallon each, two if the weather is hot» (5e `upkeep`); lethality dice; milestones; `voices master`, so that the run measures the weather and not the character agent; units metric, so degrees Celsius and kilometres.
 - `world/`: 31 pages. `validate` finds no problems; `status` shows day 1, the 25th of August, summer, Corrado (hp 24, ac 18) in Vallerana with Mastra Ilde, the quest «Le erbe per Torralba» (deadline day 10, 18:00), and the event Il ritorno di Zaira (day 4, 18:00).
@@ -50,11 +50,11 @@ First the check, which plays nothing; then the sessions, from the repo; then the
 
 ```
 $run = "<runs>\<date>\<n>"
-node playtests/run-playtest.mjs --campaign "$run\cielo" --profile playtests\players\marco-lungo.md --out "$run\results" --prepared ..\rpg-engine-weatherplaytests\21-dieci-giorni-di-cielo\brief.md --first "Ciao! Si parte per Torralba, cominciamo?" --max 45 --check
-node playtests/run-playtest.mjs --campaign "$run\cielo" --profile playtests\players\marco-lungo.md --out "$run\results" --prepared ..\rpg-engine-weatherplaytests\21-dieci-giorni-di-cielo\brief.md --first "Ciao! Si parte per Torralba, cominciamo?" --max 45
+node playtests/run-playtest.mjs --campaign "$run\cielo" --profile playtests\players\marco-lungo.md --out "$run\results" --prepared ..\rpg-engine-weather\playtests\21-dieci-giorni-di-cielo\brief.md --first "Ciao! Si parte per Torralba, cominciamo?" --max 45 --check
+node playtests/run-playtest.mjs --campaign "$run\cielo" --profile playtests\players\marco-lungo.md --out "$run\results" --prepared ..\rpg-engine-weather\playtests\21-dieci-giorni-di-cielo\brief.md --first "Ciao! Si parte per Torralba, cominciamo?" --max 45
 node playtests/run-playtest.mjs --campaign "$run\cielo" --profile playtests\players\marco-lungo.md --out "$run\results" --session 2 --first "Ciao, riprendiamo?" --max 45
 node playtests/run-playtest.mjs --campaign "$run\cielo" --profile playtests\players\marco-lungo.md --out "$run\results" --session 3 --first "Ciao, riprendiamo?" --max 40 --dashboard
-node playtests/count-playtest.mjs "$run\results" ..\rpg-engine-weatherplaytests\21-dieci-giorni-di-cielo\world > "$run\numbers.md"
+node playtests/count-playtest.mjs "$run\results" ..\rpg-engine-weather\playtests\21-dieci-giorni-di-cielo\world > "$run\numbers.md"
 node playtests/run-playtest.mjs --profile playtests\players\marco-lungo.md --out "$run\results" --questionnaire playtests\questionnaire.md
 ```
 
@@ -105,5 +105,5 @@ Every moment below, in `dialogue.md` and `turns/`, and in `numbers.md`. The exte
 | W11 | `weather` | Called when the master needs the sky again (a new session, a question of the player), not after every output that already says it. Count the calls |
 | W12 | Sessions 2 and 3 | A new master starts from the files: the sky of now from `weather` or the last line, the date, the water and the rations as the session before left them |
 | W13 | Who travels | Zaira and Pazienza in `who` on every leg after Sabbiedo, or moved with the party; nobody left behind at a well |
-| W14 | The page, session 3 | `page/`: the date with month and season in the header; whether the weather shows anywhere. The extensions' widget does not exist yet (PLAN, phase 4, step 6): what the page lacks is material for it, not the master's finding; note what the player asked about the sky that the page could have said |
+| W14 | The page, session 3 | `page/`: the date with month and season in the header; beside it the weather's chip, the sky's icon and the day's temperatures in degrees Celsius; in the Scene the card «Today's weather», its band with the fog of a cold morning and, in the desert, «Hot desert». Chip and card say the sky the last `advance`, `travel` or `weather-set` left, the storm at the Rocca included: one that differs from what the master told is a finding, the extension's if the files hold what was told, the master's if he told a sky the dice did not give. Note what the player asked about the sky that the page already said. A version from npm without the widgets (`package list`) is noted, not a finding |
 | W15 | An uneventful day | One or two lines, with the sky in them |
