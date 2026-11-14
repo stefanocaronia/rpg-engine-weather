@@ -29,7 +29,7 @@ rpg package install weather
 rpg package list
 rpg config saves checkpoint; rpg config rigor rules; rpg config dice digital; rpg config units metric
 rpg config companions none; rpg config lines none; rpg config veils none; rpg config advancement milestones; rpg config mentor off
-rpg config voices master; rpg config pictures none
+rpg config voices master; rpg config pictures none; rpg config master-rolls "behind the screen"
 rpg config calendar-start "25 August"
 rpg mode "session zero"; rpg mode play
 rpg advance --to "day 1, 06:50" --why "La partenza da Vallerana"
