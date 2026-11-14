@@ -24,11 +24,11 @@ export interface Sky
 
 /**
  * What the weather keeps in the campaign: the score, the day it was rolled for, whether its afternoon rolls again, its morning's fog and the zone it was
- * rolled in; or that it is off, while the story counts only days.
+ * rolled in; the dice's score under the story's, and the game date the story's ends at; or that it is off, while the story counts only days.
  */
 type WeatherState = Weather | { off: true; };
 
-type Weather = { score: number; day: number; variable?: boolean; fog?: Fog; zone?: Zone; rolled?: number; };
+type Weather = { score: number; day: number; variable?: boolean; fog?: Fog; zone?: Zone; rolled?: number; until?: string; };
 
 /** A moment the weather changes at: a dawn or the afternoon of a day. */
 interface Turn
@@ -59,12 +59,14 @@ const weather: PackageEntry = ({ z }) => ({
             name: "weather-set",
             description: "Set the weather, for a spell or the weather a page written before play gives: its score on the scale weather gives for this season and place, "
                 + "from 6, the mildest, to 1, its extreme, which in summer is a heat wave; the morning's fog, until noon; or both. What you leave out stays. "
-                + "It changes again at the next dawn. Example: weather-set 2, why the druid's storm; or fog heavy, why the valley's page.",
+                + "It changes again at the next dawn, unless until says when it ends: then it holds through the dawns, and at that hour the dice's weather comes back "
+                + "by itself. Example: weather-set 2, why the druid's storm; 2, until day 8, 12:00, why the storm's page; or fog heavy, why the valley's page.",
             input: z.object({
                 // A number, as the command line gives it in words too.
                 score: z.preprocess((value) => (typeof value === "string" && /^\d+$/.test(value.trim()) ? Number(value) : value), z.int().min(1).max(6)).optional()
                     .describe("from 6, the mildest, to 1, the season's extreme, as weather lists them"),
                 fog: z.enum(["heavy", "light", "none"]).optional().describe("the morning's fog, until noon: heavy, light, or none to lift it"),
+                until: z.string().optional().describe("when the story's weather ends, as the game writes dates: day 8, 12:00"),
                 why: z.string().optional().describe("why it changes, for the log"),
             }),
             positionals: ["score"],
@@ -80,7 +82,7 @@ const weather: PackageEntry = ({ z }) => ({
                     return offText;
                 }
 
-                if (input.score === undefined && input.fog === undefined) {
+                if (input.score === undefined && input.fog === undefined && input.until === undefined) {
                     throw new Error("Give the score, the fog, or both: as weather-set 2, or weather-set --fog heavy. Nothing changed.");
                 }
 
@@ -88,8 +90,13 @@ const weather: PackageEntry = ({ z }) => ({
                     throw new Error("The fog is the morning's, until noon, and it is past noon: tell an evening mist in the story. Nothing changed.");
                 }
 
-                game.state.write(setWeather(state, now.day, input.score, input.fog, zoneOf(game)));
-                const changes = [...(input.score === undefined ? [] : [`${input.score}`]), ...(input.fog === undefined ? [] : [`fog ${input.fog}`])].join(", ");
+                const until = input.until === undefined ? undefined : endOf(input.until, now);
+                game.state.write(setWeather(state, now.day, input.score, input.fog, zoneOf(game), until));
+                const changes = [
+                    ...(input.score === undefined ? [] : [`${input.score}`]),
+                    ...(input.fog === undefined ? [] : [`fog ${input.fog}`]),
+                    ...(until === undefined ? [] : [`until ${until}`]),
+                ].join(", ");
                 game.log(`weather set to ${changes}${input.why === undefined ? "" : `: ${input.why}`}`);
                 return nowText(game, false);
             },
@@ -136,7 +143,8 @@ const weather: PackageEntry = ({ z }) => ({
         }
 
         const turns = turnsBetween(from, to);
-        return turns.length === 0 ? [] : change(game, state, turns, to);
+        const ends = state.until !== undefined && (to.day - 1) * dayMinutes + (to.minute ?? 0) >= minuteOf(state.until)!;
+        return turns.length === 0 && !ends ? [] : change(game, state, turns, to);
     },
 });
 
@@ -144,16 +152,43 @@ export default weather;
 
 /**
  * The weather weather-set leaves: the score given, or the one there was; the fog given, or the morning's; the afternoon's roll only while the score stays; and
- * the score the dice gave, for the master to go back to when the story's weather ends.
+ * the score the dice gave, for the master to go back to when the story's weather ends; the hour it ends at, given or kept, while it is the story's.
  */
-function setWeather(state: Weather, day: number, score: number | undefined, fog: Fog | "none" | undefined, zone: Zone): Weather
+function setWeather(state: Weather, day: number, score: number | undefined, fog: Fog | "none" | undefined, zone: Zone, until: string | undefined): Weather
 {
     const today = state.day === day;
     const keptFog = fog === undefined ? (today ? state.fog : undefined) : fog === "none" ? undefined : fog;
-    const variable = score === undefined && today && state.variable === true;
+    const variable = score === undefined && today && state.variable === true && until === undefined && state.until === undefined;
     const rolled = state.rolled ?? state.score;
     const set = score ?? state.score;
-    return { score: set, day, ...(variable ? { variable: true } : {}), ...(keptFog === undefined ? {} : { fog: keptFog }), zone, ...(rolled === set ? {} : { rolled }) };
+    // A score back to what the dice gave ends the story's weather, its end with it; an end alone holds the weather there is.
+    const ends = until ?? state.until;
+    const story = until !== undefined || !(score !== undefined && score === rolled);
+    return {
+        score: set,
+        day,
+        ...(variable ? { variable: true } : {}),
+        ...(keptFog === undefined ? {} : { fog: keptFog }),
+        zone,
+        ...(rolled === set ? {} : { rolled }),
+        ...(story && ends !== undefined ? { until: ends } : {}),
+    };
+}
+
+/** The end weather-set is given, as the game writes dates, checked to come after now; it throws, saying how to write it. */
+function endOf(written: string, now: GameMoment): string
+{
+    const end = minuteOf(written);
+
+    if (end === undefined) {
+        throw new Error(`until ${written} is not a game date: write it as the game does, such as day ${now.day + 1}, 12:00. Nothing changed.`);
+    }
+
+    if (end <= minuteOf(now.date)!) {
+        throw new Error(`until ${written} is not after now, ${now.date}: give the hour the story's weather ends. Nothing changed.`);
+    }
+
+    return written.trim().replace(/\s+/g, " ");
 }
 
 /** The weather as it begins, with its season, or again in a zone the party came into from another; off, said once, while the story counts only days. */
@@ -178,14 +213,30 @@ function begin(game: Game, at: GameMoment, saidOff: boolean, left?: Zone): strin
     return [`Weather${into}: ${readingText(game, score, season)}.`];
 }
 
-/** The dawns and afternoons that came: each dawn rolls the change, each afternoon of a variable day rolls it again; the output tells the last of them. */
+/**
+ * The dawns and afternoons that came: each dawn rolls the change, each afternoon of a variable day rolls it again; while the story holds its weather, the dawns
+ * roll on from the dice's, kept for when it ends, and at its end the dice's comes back. The output tells the last of them.
+ */
 function change(game: Game, kept: Weather, turns: Turn[], to: GameMoment): string[]
 {
     const zone = zoneOf(game);
     let state = kept;
     let before = kept.score;
     let last: { turn: Turn; season: Season; } | undefined;
+    let ended: string | undefined;
+    // Whether a dawn or an afternoon rolled the weather the story does not hold, logged once as it ends up.
+    let rolledFree = false;
     const skies: string[] = [];
+
+    // The story's weather ends at its hour, before a dawn or an afternoon at that hour or later.
+    const endStory = (at: number): void => {
+        if (state.until !== undefined && at >= minuteOf(state.until)!) {
+            ended = state.until;
+            before = state.score;
+            state = { score: state.rolled ?? state.score, day: state.day };
+            game.log(`weather back to ${state.score}: the story's weather ended at ${ended}`);
+        }
+    };
 
     for (const turn of turns) {
         const season = seasonOf(game, turn.day);
@@ -194,8 +245,23 @@ function change(game: Game, kept: Weather, turns: Turn[], to: GameMoment): strin
             return [season ?? offText];
         }
 
+        endStory((turn.day - 1) * dayMinutes + (turn.kind === "dawn" ? dawn : afternoon));
         const cold = coldColumn(season, zone);
         const roll = (): number => game.roll("1d6").total;
+
+        // Held by the story: the dawn rolls on from the dice's weather, kept under the story's; no afternoon rolls.
+        if (state.until !== undefined) {
+            if (turn.kind === "dawn") {
+                const rolled = morningChange(state.rolled ?? state.score, cold, roll).score;
+                before = state.score;
+                state = { score: state.score, day: turn.day, ...(rolled === state.score ? {} : { rolled }), until: state.until };
+                game.log(`weather at ${rolled}, under the story's ${state.score}`);
+                skies.push(reading(state.score, season, zone).sky);
+                last = { turn, season };
+            }
+
+            continue;
+        }
 
         if (turn.kind === "dawn") {
             before = state.score;
@@ -210,16 +276,28 @@ function change(game: Game, kept: Weather, turns: Turn[], to: GameMoment): strin
         }
 
         last = { turn, season };
+        rolledFree = true;
     }
 
+    if (rolledFree) {
+        game.log(`weather at ${state.score}`);
+    }
+
+    endStory((to.day - 1) * dayMinutes + (to.minute ?? 0));
     game.state.write({ ...state, zone });
+    const season = seasonOf(game, to.day);
+
+    if (ended !== undefined && season !== undefined && isSeason(season) && (last === undefined || state.until === undefined)) {
+        const back = `${readingText(game, state.score, season)}, ${trendText(before, state.score)}${morningNotes(state, { day: to.day, kind: "dawn" }, to)}`;
+        return [`Weather${zoneText(zone)}: the story's ended at ${ended}, and the dice's is back: ${back}.`];
+    }
 
     if (last === undefined) {
         return [];
     }
 
-    game.log(`weather at ${state.score}`);
-    const now = `${readingText(game, state.score, last.season)}, ${trendText(before, state.score)}${morningNotes(state, last.turn, to)}`;
+    const held = state.until === undefined ? "" : `; the story's, until ${state.until}${state.rolled === undefined ? "" : `, then the dice's ${reading(state.rolled, last.season, zone).sky}`}`;
+    const now = `${readingText(game, state.score, last.season)}, ${trendText(before, state.score)}${morningNotes(state, last.turn, to)}${held}`;
 
     if (skies.length > 1) {
         const named = skies.length > shownSkies ? `…, ${skies.slice(-shownSkies).join(", ")}` : skies.join(", ");
@@ -297,7 +375,12 @@ function nowText(game: Game, withScale: boolean): string
     const zone = zoneOf(game);
     const today = state.day === now.day ? morningNotes(state, { day: now.day, kind: "dawn" }, now) : "";
     const scale = [6, 5, 4, 3, 2, 1].map((score) => `${score} ${reading(score, season, zone).sky}`).join(", ");
-    const rolled = state.rolled === undefined ? "" : `, set by the story; the dice gave ${state.rolled}, ${reading(state.rolled, season, zone).sky}, to go back to when it ends`;
+    const dice = state.rolled === undefined ? "" : `; the dice gave ${state.rolled}, ${reading(state.rolled, season, zone).sky}`;
+    const rolled = state.until !== undefined
+        ? `, set by the story until ${state.until}${dice}, which comes back then by itself`
+        : state.rolled === undefined
+        ? ""
+        : `, set by the story${dice}, to go back to when it ends`;
     return `Now${zoneText(zone)}: ${readingText(game, state.score, season)}${today}. Score ${state.score} of 6${rolled}.${withScale ? ` weather-set takes, this ${season} here: ${scale}.` : ""}`;
 }
 
@@ -392,6 +475,19 @@ function turnsBetween(from: GameMoment, to: GameMoment): Turn[]
     return turns;
 }
 
+/** A game date as the game writes it, day 8, 12:00 or day 8, as minutes from the story's first midnight; undefined for anything else. */
+function minuteOf(date: string): number | undefined
+{
+    const match = /^day\s+(\d{1,9})(?:\s*,\s*(\d{1,2}):(\d{2}))?$/i.exec(date.trim());
+
+    if (match === null) {
+        return undefined;
+    }
+
+    const [day, hour, minute] = [Number(match[1]), Number(match[2] ?? 0), Number(match[3] ?? 0)];
+    return day < 1 || hour >= 24 || minute >= 60 ? undefined : (day - 1) * dayMinutes + hour * 60 + minute;
+}
+
 /** The state as kept; undefined when there is none, or what is written there is not one, as by hand. */
 function readState(game: GameView): WeatherState | undefined
 {
@@ -415,6 +511,7 @@ function readState(game: GameView): WeatherState | undefined
             ...(state.fog === "heavy" || state.fog === "light" ? { fog: state.fog } : {}),
             ...(state.zone === "temperate" || state.zone === "torrid" || state.zone === "polar" ? { zone: state.zone } : {}),
             ...(whole(state.rolled, 1, 6) ? { rolled: state.rolled as number } : {}),
+            ...(typeof state.until === "string" && minuteOf(state.until) !== undefined ? { until: state.until } : {}),
         }
         : undefined;
 }

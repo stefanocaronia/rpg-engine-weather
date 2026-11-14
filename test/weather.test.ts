@@ -242,6 +242,30 @@ describe("the weather in a campaign", () => {
         expect(await ok("advance", "--by", "13h")).toBe("day 1, 18:00 → day 2, 07:00 (15 April, spring).\nWeather this morning: heavy rain and wind, 5 to 10 °C, as before.");
     });
 
+    it("holds the story's weather through the dawns until the hour given, rolling the dice's under it, then brings the dice's back by itself", async () => {
+        await campaign("5e", "14 April", 4, 6);
+        await ok("advance", "--to", "day 1, 18:00");
+        expect(await ok("weather-set", "1", "--until", "day 2, 12:00", "--why", "the storm's page")).toBe(
+            "Now: heavy rain and wind, 5 to 10 °C. Score 1 of 6, set by the story until day 2, 12:00; the dice gave 4, partly cloudy, which comes back then by itself.",
+        );
+        expect(await ok("advance", "--to", "day 2, 07:00")).toBe(
+            "day 1, 18:00 → day 2, 07:00 (15 April, spring).\nWeather this morning: heavy rain and wind, 5 to 10 °C, as before; the story's, until day 2, 12:00, then the dice's sunny and mild.",
+        );
+        expect(await ok("weather")).toContain("Score 1 of 6, set by the story until day 2, 12:00; the dice gave 5, sunny and mild, which comes back then by itself.");
+        // The fog alone keeps the story's weather and its end.
+        expect(await ok("weather-set", "--fog", "light")).toContain("set by the story until day 2, 12:00");
+        expect(await ok("advance", "--by", "6h")).toBe("day 2, 07:00 → day 2, 13:00 (15 April, spring).\nWeather: the story's ended at day 2, 12:00, and the dice's is back: sunny and mild, 15 to 20 °C, better.");
+        expect(testing.read("extensions/weather/state.yaml")).not.toContain("until");
+        expect(testing.log().filter((entry) => entry.type === "extension").map((entry) => entry.data.text).slice(1)).toEqual([
+            "weather set to 1, until day 2, 12:00: the storm's page",
+            "weather at 5, under the story's 1",
+            "weather set to fog light",
+            "weather back to 5: the story's weather ended at day 2, 12:00",
+        ]);
+        expect((await rpg("weather-set", "2", "--until", "noon")).output).toContain("not a game date");
+        expect((await rpg("weather-set", "2", "--until", "day 2, 12:00")).output).toContain("not after now");
+    });
+
     it("sets the morning's fog apart from the score, keeping what is not given, and never past noon", async () => {
         await campaign("5e", "10 January", 4, 1, 1);
         await ok("advance", "--to", "day 1, 18:00");
