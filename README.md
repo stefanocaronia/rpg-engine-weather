@@ -12,6 +12,10 @@ From a campaign, with RPG Engine 0.6.0 or later: `rpg package install weather`, 
 
 Its code in the dashboard's page, `src/page.tsx` built to `dist/page.js`, draws the sky of the chip in the top and the band of the sky in the Scene's card, from the data its widgets give: the sky and its icon, its score, the season and the zone, the day's lowest and highest, the morning's fog, and whether the afternoon may change it. The chip's sky is the icon of its kind, the fog under it; the band is the day in the season's colours, or the desert's and the ice's: the sun, as many clouds as the day is grey, rain, snow, a storm or the wind, the heat's shimmer and the frost, the fog thinning towards noon, an afternoon that may change past a dashed line, and the day's lowest to highest along its foot. Without words, it turns right to left, and nothing in it moves. It needs RPG Engine 0.6.0 or later, the extension API 4.
 
+## Tell us
+
+A problem goes to this repository's [issues](https://github.com/stefanocaronia/rpg-engine-weather/issues/new/choose); questions and ideas to RPG Engine's [Discussions](https://github.com/stefanocaronia/rpg-engine/discussions). This repository takes no pull requests: to add something to the game, make a package of your own, a [game system](https://github.com/stefanocaronia/rpg-engine/blob/main/docs/game-systems.md) or an [extension](https://github.com/stefanocaronia/rpg-engine/blob/main/docs/extensions.md), in a repository of yours.
+
 ## Develop and test
 
 You need Node 24 or later, the engine for its test kit, `rpg-engine/testing`, and the 5e system its campaigns play, `@rpgengine/system-5e`, both devDependencies:
